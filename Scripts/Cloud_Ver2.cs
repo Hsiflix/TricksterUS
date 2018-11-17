@@ -10,30 +10,48 @@ public class Cloud_Ver2 : MonoBehaviour {
 	public Sprite FlCloud;
 	public Sprite TrCloud;
 	public Sprite AnCloud;
-	public Sprite AnCloudPart2;
+	public GameObject AnCloudPart2;
 	static public bool active = false;
 	static public bool end = false;
 	static public bool start = true;
 	//static public short ver = -1; //1=Flash, 2=Trick, 3=Angel, 4=Us
-	static public short ver = 4; //1=Flash, 2=Trick, 3=Angel, 4=Us
-	private Vector3 position;
+	static public short ver = 1; //1=Flash, 2=Trick, 3=Angel, 4=Us
 	private Vector3 target;
+	static public Vector3 cameraPosition;
+	private double k = 0; // y = k*x + b
+	private double b = 0; // y = k*x + b
+	private double x = 0;
+	private double TrCloud_x = 0;
+	private bool trigger = true;
+	private short rat = 1;
 
 	// Use this for initialization
 	void Start () {
-		position = transform.position;
+		cameraPosition = new Vector3(0.45f + Spawn.MySize * 0.45f, 4.05f + Spawn.MySize * 0.45f, -10);
+		//k = UnityEngine.Random.Range(-1f,1.01f);
+		//b = cameraPosition.y - cameraPosition.x*k;
+		//x = -15;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if(start){
 			start = false;
 			float x = UnityEngine.Random.Range(-2, 7);
             target = transform.position = new Vector3(x, -3f, -2.45f);//
 			switch (ver){ //1=Flash, 2=Trick, 3=Angel, 4=Us
-				case 1: GetComponent<SpriteRenderer>().sprite = FlCloud; break;
-				case 2: GetComponent<SpriteRenderer>().sprite = TrCloud; break;
-				case 3: GetComponent<SpriteRenderer>().sprite = AnCloud; break;
+				case 1: 
+					transform.position = new Vector3(-15f, 0f,0f);
+					GetComponent<SpriteRenderer>().sprite = FlCloud; 
+					k = UnityEngine.Random.Range(-1f,1.01f);
+					b = cameraPosition.y - cameraPosition.x*k;
+					do
+						rat = (short)UnityEngine.Random.Range(-1,2);
+					while (rat == 0);
+					Debug.Log(rat);
+					this.x = 15*rat; //
+					break;
+				case 2: GetComponent<SpriteRenderer>().sprite = UsCloud; break;
+				case 3: GetComponent<SpriteRenderer>().sprite = AnCloud; AnCloudPart2.SetActive(true); break;
 				case 4: GetComponent<SpriteRenderer>().sprite = UsCloud; break;
 			}
 			active = true;
@@ -42,18 +60,45 @@ public class Cloud_Ver2 : MonoBehaviour {
 
 			switch (ver){ //1=Flash, 2=Trick, 3=Angel, 4=Us
 				case 1: 
-
+					x -= UnityEngine.Random.Range(0.15f, 0.3f)*rat;
+					target = new Vector3((float)x, (float)(k*x+b), -2.45f);
+					transform.position = Vector3.Lerp(transform.position, target, 0.5f);
+					if(transform.position.x > 16 || transform.position.x < -16){
+						end = true;
+					}
 					break;
 				case 2:
-
+					if (trigger && (transform.position.y > cameraPosition.y - 1f) && (transform.position.y < cameraPosition.y)) {
+						GetComponent<SpriteRenderer>().sprite = TrCloud;
+						Debug.Log(true);
+						trigger = false;
+					}
+					if (!trigger && (transform.position.y > cameraPosition.y + 1f)){
+						GetComponent<SpriteRenderer>().sprite = TrCloud;
+						Debug.Log(true);
+						trigger = true;
+					}
+					target.x += UnityEngine.Random.Range(-1f,1.01f);
+					target.y += UnityEngine.Random.Range(0.05f, 0.1f);
+					transform.position = Vector3.Lerp(transform.position, target, 0.003f);
+					if(transform.position.y >= 15)
+					{
+						end = true;
+					}
 					break;
 				case 3:
-
+					target.x += UnityEngine.Random.Range(-1f,1.01f);
+					target.y += UnityEngine.Random.Range(0.05f, 0.1f);
+					transform.position = Vector3.Lerp(transform.position, target, 0.003f);
+					if(transform.position.y >= 15)
+					{
+						end = true;
+					}
 					break;
 				case 4:
 					target.x += UnityEngine.Random.Range(-1f,1.01f);
-					target.y += UnityEngine.Random.Range(0.05f, 0.2f);
-					transform.position = Vector3.Lerp(transform.position, target, 0.005f);
+					target.y += UnityEngine.Random.Range(0.05f, 0.1f);
+					transform.position = Vector3.Lerp(transform.position, target, 0.003f);
 					if(transform.position.y >= 15)
 					{
 						end = true;
@@ -65,6 +110,7 @@ public class Cloud_Ver2 : MonoBehaviour {
 		if(end){
 			end = false;
 			active = false;
+			AnCloudPart2.SetActive(false);
 			GetComponent<SpriteRenderer>().sprite = null;
 		}
 	}

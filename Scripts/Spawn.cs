@@ -48,7 +48,6 @@ public class Spawn : MonoBehaviour {
         //Touchs.LOSE = false;
         //Start();
     }
-
     void Start () {
         //Правка 10 июня 2018
         Touchs.LOSE = false;
@@ -57,8 +56,6 @@ public class Spawn : MonoBehaviour {
         //AudioSource audio = GetComponent<AudioSource>();
         //if(Infos.AudioOn) audio.Pause();
         //Конец правки 7 ноября 2018
-
-
 
         SpawnNumberX = 1; //начало спавна по Х
         SpawnNumberY = 5; //начало спавна по Y

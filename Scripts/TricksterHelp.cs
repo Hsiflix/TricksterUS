@@ -9,6 +9,7 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
     public Image CoolDown;
     public float CoolDownf = 10;
     bool isCoolDown = false;
+    public GameObject Cloud;
 
     static public bool isCloud = false;
     static public short change = 0;
@@ -47,32 +48,38 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
         {
             StartCoroutine(Wait());
 
-            short randomCloud = (short)Random.Range(1, 11);//Рандомное число для выбора облака 1=Flash, 2=Trick, 3=Angel, 4..10=Normal
+            //short randomCloud = (short)Random.Range(1, 11);//Рандомное число для выбора облака 1=Flash, 2=Trick, 3=Angel, 4..10=Normal
+            short randomCloud = 1;
             if(randomCloud==1){
-                CLoud.ChoiseVer = 1;
+                Cloud_Ver2.ver = 1;
+
                 short randomTime = (short)Random.Range(10, 20); //Рандомное добавляемое время (max не включая)
                 if(randomTime > 18) randomTime = (short)Random.Range(20, 45);
                 if(randomTime > 43) randomTime = (short)Random.Range(45, 95);
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
-                change = 2; value = randomTime;
-                CLoud.setvalue = true;
-                //CLoud.value = value;
-                CLoud.Trigger = true;
+                change = 2; 
+                value = randomTime;
+
+                Cloud.SetActive(true);
+                Cloud_Ver2.start = true;
             }else if(randomCloud==2){
-                CLoud.ChoiseVer = 2;
+                Cloud_Ver2.ver = 2;
 
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
 
+                Cloud.SetActive(true);
+                Cloud_Ver2.start = true;
+
             }else if(randomCloud==3){
                 CLoud.ChoiseVer = 3;
-
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
 
             }else { 
-                CLoud.ChoiseVer = 4;
+                //CLoud.ChoiseVer = 4;
+                Cloud_Ver2.ver = 4;
                 short randomTime = (short)Random.Range(3, 8); //Рандомное добавляемое время (max не включая)
                 short randomStep = (short)Random.Range(1, 4); //Рандомные добовляемые ходы (max не включая)
                 //1-повернуть
