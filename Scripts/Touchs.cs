@@ -44,16 +44,21 @@ public class Touchs : MonoBehaviour {
                     NumberOfStep++;
                     Debug.Log(""+hit.collider.name);
                     NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
-                    next = GameObject.Find(NumberBall.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
-                    Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
-                    nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
+                    if(NumberBall == "Cloud"){
+                        TricksterHelp.isCloud = true;
+                        Cloud_Ver2.end = true;
+                    }else{
+                        next = GameObject.Find(NumberBall.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
+                        Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
+                        nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
 
-                    //Изменение кол-ва ходов
-                    if (myGUI.stepGo)
-                        myGUI.step--;
-                    else
-                        myGUI.step++;
-                    //---------------------
+                        //Изменение кол-ва ходов
+                        if (myGUI.stepGo)
+                            myGUI.step--;
+                        else
+                            myGUI.step++;
+                        //---------------------
+                    }
                 }
             }
         }
