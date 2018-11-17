@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class CLoud : MonoBehaviour {
 
-    //static public bool Trigger = false;
     static public bool Trigger = false;
     public int Ver; //1=Flash, 2=Trick, 3=Angel, 4=Normal
     static public int ChoiseVer = -1;
