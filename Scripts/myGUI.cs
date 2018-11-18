@@ -150,7 +150,10 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
                     myStyle.normal.textColor = Color.red;
             if (timersecond < 4) myStyle.normal.textColor = Color.red;//
         }
-        GUI.Label(new Rect(48 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), ""+timersecond, myStyle);
+        if(timersecond < 1000)
+            GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), ""+timersecond, myStyle);
+        else
+            GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "999+", myStyle);
         myStyle.normal.textColor = new Color(36 / 255f, 0, 51 / 255f);
         //GUI.Label(new Rect(23 / BalansWidth, 130 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "Step:", myStyle);
         myStyle.normal.textColor = Color.white;

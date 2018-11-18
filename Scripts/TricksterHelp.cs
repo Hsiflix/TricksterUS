@@ -43,14 +43,14 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
 
     public void TrickHelp() //Скрипт кнопки
     {
-        //Debug.Log(Active);
         if (Active)
         {
             StartCoroutine(Wait());
-
-            //short randomCloud = (short)Random.Range(1, 11);//Рандомное число для выбора облака 1=Flash, 2=Trick, 3=Angel, 4..10=Normal
-            short randomCloud = 1;
-            if(randomCloud==1){
+            rerunCloud:
+            short randomCloud = (short)Random.Range(1, 11);//Рандомное число для выбора облака 1=Flash, 2=Trick, 3=Angel, 4..10=Normal
+            //short randomCloud = 3;
+            if (!myGUI.timerGo && (randomCloud == 1)) goto rerunCloud;
+            if(randomCloud==1){ //FlCloud
                 Cloud_Ver2.ver = 1;
 
                 short randomTime = (short)Random.Range(10, 20); //Рандомное добавляемое время (max не включая)
@@ -63,7 +63,7 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
 
                 Cloud.SetActive(true);
                 Cloud_Ver2.start = true;
-            }else if(randomCloud==2){
+            }else if(randomCloud==2){ //TrCloud
                 Cloud_Ver2.ver = 2;
 
                 CoolDown.fillAmount = 0.99f;//
@@ -72,21 +72,26 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                 Cloud.SetActive(true);
                 Cloud_Ver2.start = true;
 
-            }else if(randomCloud==3){
-                CLoud.ChoiseVer = 3;
+            }else if(randomCloud==3){ //AnCloud
+                Cloud_Ver2.ver = 3;
+
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
 
-            }else { 
-                //CLoud.ChoiseVer = 4;
+                Cloud.SetActive(true);
+                Cloud_Ver2.start = true;
+            }else { //UsCloud
                 Cloud_Ver2.ver = 4;
+
                 short randomTime = (short)Random.Range(3, 8); //Рандомное добавляемое время (max не включая)
                 short randomStep = (short)Random.Range(1, 4); //Рандомные добовляемые ходы (max не включая)
                 //1-повернуть
                 //2-добавить время
                 //3-добавить шаги
+
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
+
                 rerun: short random = (short)Random.Range(1, 4);
                 if (!myGUI.timerGo && (random == 2)) goto rerun;
                 if (!myGUI.stepGo && (random == 3)) goto rerun;
@@ -100,9 +105,8 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                         break;
                     default: Debug.Log("Недопустимое значение в TricksterHelp.cs -> TrickHelp(); "); goto rerun;
                 }
-                CLoud.setvalue = true;
-                CLoud.value = value;
-                CLoud.Trigger = true;
+                Cloud.SetActive(true);
+                Cloud_Ver2.start = true;
             }
         }
     }

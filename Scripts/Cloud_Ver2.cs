@@ -21,9 +21,10 @@ public class Cloud_Ver2 : MonoBehaviour {
 	private double k = 0; // y = k*x + b
 	private double b = 0; // y = k*x + b
 	private double x = 0;
-	private double TrCloud_x = 0;
 	private bool trigger = true;
 	private short rat = 1;
+	private int numerate = 0;
+	private int randNum = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -36,7 +37,7 @@ public class Cloud_Ver2 : MonoBehaviour {
 	void Update () {
 		if(start){
 			start = false;
-			float x = UnityEngine.Random.Range(-2, 7);
+			float x = UnityEngine.Random.Range(-1, 6);
             target = transform.position = new Vector3(x, -3f, -2.45f);//
 			switch (ver){ //1=Flash, 2=Trick, 3=Angel, 4=Us
 				case 1: 
@@ -68,17 +69,37 @@ public class Cloud_Ver2 : MonoBehaviour {
 					}
 					break;
 				case 2:
-					if (trigger && (transform.position.y > cameraPosition.y - 1f) && (transform.position.y < cameraPosition.y)) {
-						GetComponent<SpriteRenderer>().sprite = TrCloud;
-						Debug.Log(true);
+					// Меняется через 40-80 кадров после цента экрана
+					if ((transform.position.y > cameraPosition.y) && trigger && numerate<=randNum) {
 						trigger = false;
+						randNum =  UnityEngine.Random.Range(40,80);
+						Debug.Log(randNum);
 					}
-					if (!trigger && (transform.position.y > cameraPosition.y + 1f)){
-						GetComponent<SpriteRenderer>().sprite = TrCloud;
-						Debug.Log(true);
-						trigger = true;
+					if(!trigger){
+						if(numerate == randNum){
+							GetComponent<SpriteRenderer>().sprite = TrCloud;
+							trigger = true;
+						}
+						numerate++;
 					}
-					target.x += UnityEngine.Random.Range(-1f,1.01f);
+					/*numerate++; // Меняется каждые 100-160 кадров на 3 кадра
+					if(trigger){
+						trigger = false;
+						randNum += UnityEngine.Random.Range(100,160);
+					}
+					if(!trigger){
+						if(numerate==randNum){
+							GetComponent<SpriteRenderer>().sprite = TrCloud;
+						}
+						if(numerate==randNum+3){
+							GetComponent<SpriteRenderer>().sprite = UsCloud;
+							trigger = true;
+						}
+					} */
+				
+					if(target.x > cameraPosition.x + 3) target.x += UnityEngine.Random.Range(-1.3f,1f);
+					else if (target.x < cameraPosition.x - 3) target.x += UnityEngine.Random.Range(-1f,1.3f);
+					else target.x += UnityEngine.Random.Range(-1f,1.000001f);
 					target.y += UnityEngine.Random.Range(0.05f, 0.1f);
 					transform.position = Vector3.Lerp(transform.position, target, 0.003f);
 					if(transform.position.y >= 15)
@@ -87,7 +108,9 @@ public class Cloud_Ver2 : MonoBehaviour {
 					}
 					break;
 				case 3:
-					target.x += UnityEngine.Random.Range(-1f,1.01f);
+					if(target.x > cameraPosition.x + 3) target.x += UnityEngine.Random.Range(-1.3f,1f);
+					else if (target.x < cameraPosition.x - 3) target.x += UnityEngine.Random.Range(-1f,1.3f);
+					else target.x += UnityEngine.Random.Range(-1f,1.000001f);
 					target.y += UnityEngine.Random.Range(0.05f, 0.1f);
 					transform.position = Vector3.Lerp(transform.position, target, 0.003f);
 					if(transform.position.y >= 15)
@@ -96,7 +119,9 @@ public class Cloud_Ver2 : MonoBehaviour {
 					}
 					break;
 				case 4:
-					target.x += UnityEngine.Random.Range(-1f,1.01f);
+					if(target.x > cameraPosition.x + 3) target.x += UnityEngine.Random.Range(-1.3f,1f);
+					else if (target.x < cameraPosition.x - 3) target.x += UnityEngine.Random.Range(-1f,1.3f);
+					else target.x += UnityEngine.Random.Range(-1f,1.000001f);
 					target.y += UnityEngine.Random.Range(0.05f, 0.1f);
 					transform.position = Vector3.Lerp(transform.position, target, 0.003f);
 					if(transform.position.y >= 15)
