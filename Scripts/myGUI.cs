@@ -26,6 +26,10 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
     public Font myFont;
     static public bool timerGo = false;
     static public bool stepGo = false;
+    static public bool timerUp = false;
+    static public bool stepUp = false;
+    static public int memTimer = 0;
+    static public int trHelpValue = 0;
     static public int step;
 
     public float scrinWidth;
@@ -63,6 +67,13 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
 
     void Update()
     {
+        if (timerUp || stepUp){
+            if((memTimer == timersecond + 2) || (memTimer == timersecond - 2)){
+                timerUp = false;
+                stepUp = false;
+            }
+        }
+
         if (stepGo)
         {
             if (step == 0 && BotX.BotOn == false && Touchs.StartTouch)
@@ -150,14 +161,24 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
                     myStyle.normal.textColor = Color.red;
             if (timersecond < 4) myStyle.normal.textColor = Color.red;//
         }
-        if(timersecond < 1000)
-            GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), ""+timersecond, myStyle);
-        else
-            GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "999+", myStyle);
-        myStyle.normal.textColor = new Color(36 / 255f, 0, 51 / 255f);
+        if(!timerUp){
+            if(timersecond < 1000)
+                GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "" + timersecond, myStyle);
+            else
+                GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "999+", myStyle);
+        } else{
+            myStyle.normal.textColor = Color.green;
+            GUI.Label(new Rect(30 / BalansWidth, 68 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "+" + trHelpValue, myStyle);
+        }
+        //myStyle.normal.textColor = new Color(36 / 255f, 0, 51 / 255f);
         //GUI.Label(new Rect(23 / BalansWidth, 130 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "Step:", myStyle);
-        myStyle.normal.textColor = Color.white;
-        GUI.Label(new Rect(40 / BalansWidth, 187 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), ""+step, myStyle);
+        if(!stepUp){
+            myStyle.normal.textColor = Color.white;
+            GUI.Label(new Rect(40 / BalansWidth, 187 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "" + step, myStyle);
+        }else{
+            myStyle.normal.textColor = Color.green;
+            GUI.Label(new Rect(40 / BalansWidth, 187 / BalansHeight, 0 / BalansWidth, 0 / BalansHeight), "+" + trHelpValue, myStyle);
+        }
         myStyle.normal.textColor = Color.black;
 
         switch (Spawn.WinBall) //Победный цвет: 1 - blue, 2 - yellow, 3 - red, 4 - green;//

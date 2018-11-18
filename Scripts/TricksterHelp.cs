@@ -33,9 +33,21 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
             isCloud = false;
             switch (change)
             {
-                case 1: Rotate(); break;
-                case 2: AddTime(value); break;
-                case 3: AddStep(value); break;
+                case 1: 
+                    Rotate(); 
+                    break;
+                case 2: 
+                    myGUI.trHelpValue = value;
+                    myGUI.memTimer = myGUI.timersecond + value;
+                    myGUI.timerUp = true;
+                    AddTime(value); 
+                    break;
+                case 3:    
+                    myGUI.trHelpValue = value;
+                    myGUI.memTimer = myGUI.timersecond;
+                    myGUI.stepUp = true; 
+                    AddStep(value); 
+                    break;
             }
         }
 
@@ -48,11 +60,12 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
             StartCoroutine(Wait());
             rerunCloud:
             short randomCloud = (short)Random.Range(1, 11);//Рандомное число для выбора облака 1=Flash, 2=Trick, 3=Angel, 4..10=Normal
-            //short randomCloud = 3;
+            //short randomCloud = 1;
             if (!myGUI.timerGo && (randomCloud == 1)) goto rerunCloud;
             if(randomCloud==1){ //FlCloud
                 Cloud_Ver2.ver = 1;
 
+                Cloud_Ver2.flSound = true;
                 short randomTime = (short)Random.Range(10, 20); //Рандомное добавляемое время (max не включая)
                 if(randomTime > 18) randomTime = (short)Random.Range(20, 45);
                 if(randomTime > 43) randomTime = (short)Random.Range(45, 95);
@@ -65,9 +78,10 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                 Cloud_Ver2.start = true;
             }else if(randomCloud==2){ //TrCloud
                 Cloud_Ver2.ver = 2;
-
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
+
+
 
                 Cloud.SetActive(true);
                 Cloud_Ver2.start = true;

@@ -11,6 +11,7 @@ public class Cloud_Ver2 : MonoBehaviour {
 	public Sprite TrCloud;
 	public Sprite AnCloud;
 	public GameObject AnCloudPart2;
+	static public bool flSound = false;
 	static public bool active = false;
 	static public bool end = false;
 	static public bool start = true;
@@ -35,6 +36,10 @@ public class Cloud_Ver2 : MonoBehaviour {
 	}
 	
 	void Update () {
+		if(flSound){
+			flSound = false;
+			GetComponent<AudioSource>().Play();
+		}
 		if(start){
 			start = false;
 			float x = UnityEngine.Random.Range(-1, 6);
@@ -58,7 +63,6 @@ public class Cloud_Ver2 : MonoBehaviour {
 			active = true;
 		}
 		if(active){
-
 			switch (ver){ //1=Flash, 2=Trick, 3=Angel, 4=Us
 				case 1: 
 					x -= UnityEngine.Random.Range(0.15f, 0.3f)*rat;

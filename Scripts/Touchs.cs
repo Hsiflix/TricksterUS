@@ -42,7 +42,7 @@ public class Touchs : MonoBehaviour {
                 {
                     StartTouch = false; // Остановка возможности касания
                     NumberOfStep++;
-                    Debug.Log(""+hit.collider.name);
+                    //Debug.Log(""+hit.collider.name);
                     NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
                     if(NumberBall == "Cloud"){
                         TricksterHelp.isCloud = true;
