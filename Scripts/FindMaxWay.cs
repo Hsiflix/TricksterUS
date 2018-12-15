@@ -1,15 +1,14 @@
-﻿///Eeeva
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class BotX : MonoBehaviour {
+public class FindMaxWay : MonoBehaviour {
 
     private GameObject next; // Шар для кручения
     static public int BotWin;
-    private int PlayerQu = 0;
-    private int BotQu = 0;
+    //private int PlayerQu = 0;
+    //private int BotQu = 0;
     private int[] QueMas;
     static private int[] ArrColorBot; //массив цветов
     static private int[] ArrWayBot; //массив направлений
@@ -18,28 +17,16 @@ public class BotX : MonoBehaviour {
     private int NextBall;
     private int NextBall1;
     private bool Rotating, Rotating1;
-    static public bool BotOn;
-    static public bool Way2 = false;
-    static public bool Way2True = false;
+    static public bool Activate = false;
+    static public bool Inicializate = false;
 
     public void Restart()
     {
-        if(Way2){
-            Way2 = false;
-            Way2True = true;
-            for (int i = 1; i < Spawn.MySize * Spawn.MySize + 1; i++)
-            {
-                ArrColorBot[i] = Spawn.ArrColor[i];
-                ArrWayBot[i] = Spawn.ArrWay[i];
-                WayUp(i);
-            }
+        for (int i = 1; i < Spawn.MySize * Spawn.MySize + 1; i++)
+        {
+            ArrColorBot[i] = Spawn.ArrColor[i];
+            ArrWayBot[i] = Spawn.ArrWay[i];
         }
-        else
-            for (int i = 1; i < Spawn.MySize * Spawn.MySize + 1; i++)
-            {
-                ArrColorBot[i] = Spawn.ArrColor[i];
-                ArrWayBot[i] = Spawn.ArrWay[i];
-            }
     }
 
     private void RestartMas()
@@ -49,6 +36,7 @@ public class BotX : MonoBehaviour {
 
     private void Start()
     {
+        BotWin = Spawn.WinBall;
         QueMas = new int[Spawn.MySize * Spawn.MySize +  1];
         ArrColorBot = new int[Spawn.MySize * Spawn.MySize + 1];
         ArrWayBot = new int[Spawn.MySize * Spawn.MySize + 1];
@@ -56,32 +44,24 @@ public class BotX : MonoBehaviour {
         access = true;
     }
 
-    private void FixedUpdate()
-    {
-        if(myGUI.stepGo && myGUI.step == 0 && Touchs.StartTouch)
-        {
-            for (int i = 1; i < Spawn.MySize * Spawn.MySize; i++)
-            {
-                if (Spawn.ArrColor[i] == Spawn.WinBall)
-                    PlayerQu++;
-                else if (Spawn.ArrColor[i] == BotWin)
-                    BotQu++;
-            }
-            if (PlayerQu > BotQu)
-                Touchs.WIN = true;
-            else Touchs.LOSE = true;
-        }
-    }
-
     private void Update()
     {
-        if (Touchs.StartTouch && Touchs.NumberOfStep % 2 == 0)
+        if (Inicializate){
+            access = true;
+            Inicializate = false;
+            BotWin = Spawn.WinBall;
+            QueMas = new int[Spawn.MySize * Spawn.MySize +  1];
+            ArrColorBot = new int[Spawn.MySize * Spawn.MySize + 1];
+            ArrWayBot = new int[Spawn.MySize * Spawn.MySize + 1];
+        }
+        if (Activate)
         {
+            //Debug.Log("Activate");
+            Activate = false;
             Touchs.StartTouch = false;
             Touchs.NumberOfStep = 1;
             if (access)
             {
-                Restart:
                 access = false;
                 Restart();
                 RestartMas();
@@ -111,38 +91,14 @@ public class BotX : MonoBehaviour {
                     if (ArrColorBot[maxj] == Spawn.WinBall) { maxj = 0; tmp++;}
                 }
                 tmp = 0;
-                if (QueMas[maxj] == 0) {
-                    Way2 = true;
-                    if(!Way2True){
-                        goto Restart;
-                    }
-                    //Debug.Log("(QueMas[maxj] == 0)");
-                    //Debug.Log(Spawn.ArrColor[maxj]);
-                    while(Spawn.ArrColor[maxj] == BotWin) {
-                        maxj = UnityEngine.Random.Range(1, Spawn.MySize * Spawn.MySize);
-                        Debug.Log(maxj);
-                    }
-                    if(Way2True){
-                        Way2True = false;
-                    }
-                }
-                
-                //
-        /*if (maxj == 1){
-                    Debug.Log(maxj);
-                    string test = "";
-                    for (int i = 1; i < Spawn.MySize * Spawn.MySize + 1; i++)
-                    {
-                        test+=QueMas[i].ToString();
-                    }
-                    Debug.Log(test);
-                }*/
-                //
-                
-                next = GameObject.Find(maxj.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
-                Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
-                nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
-                access = true;
+                if (maxj == 0) maxj = UnityEngine.Random.Range(1, Spawn.MySize * Spawn.MySize);
+                TargetWay.ballNum = maxj;
+                TargetWay.activate = true;
+                /*next = GameObject.Find(maxj.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
+                Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись*/
+                //Debug.Log(maxj.ToString());
+                /*nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
+                access = true;*/
             }
         }
     }

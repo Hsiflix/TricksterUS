@@ -56,7 +56,7 @@ public class Spawn : MonoBehaviour {
         //AudioSource audio = GetComponent<AudioSource>();
         //if(Infos.AudioOn) audio.Pause();
         //Конец правки 7 ноября 2018
-
+        FindMaxWay.Inicializate = true;
         SpawnNumberX = 1; //начало спавна по Х
         SpawnNumberY = 5; //начало спавна по Y
         ArrColor = new int[MySize * MySize + 1];

@@ -12,6 +12,7 @@ public class MapScroll : MonoBehaviour
     public GameObject _ButLvlLoJunNew1;
     public GameObject _ButLvlLoJunNew2;
     public GameObject _ButLvlLoPeNew;
+    public GameObject _DustRuins;
 
     void NameOf()
     {
@@ -22,6 +23,13 @@ public class MapScroll : MonoBehaviour
     {
         NameOf();
         SceneManager.LoadScene("menu");
+    }
+    public void lvlB1(){
+        Debug.Log("lvlB1()");
+        NameOf();
+        ButLoadLvl._namelvl += "B1"; //B* - уровни с ботом в руинах
+        WinMenuMoney.moneyAdd = 1000;
+        _DustRuins.SetActive(true);
     }
     public void lvl1()
     {

@@ -27,10 +27,11 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                 CoolDown.fillAmount = 0;
             }
         }
-
+        //
         if (isCloud)
         {
             isCloud = false;
+			Cloud.SetActive(false);
             switch (change)
             {
                 case 1: 
@@ -48,6 +49,16 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                     myGUI.stepUp = true; 
                     AddStep(value); 
                     break;
+                case 4:
+                    TempBool.start = true;
+                    break;
+                case 5:
+                    myGUI.timersecond = (int)(myGUI.timersecond/2);
+                    break;
+                case 6:
+                    FindMaxWay.Inicializate = true;
+                    FindMaxWay.Activate = true;
+                    break;
             }
         }
 
@@ -60,15 +71,16 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
             StartCoroutine(Wait());
             rerunCloud:
             short randomCloud = (short)Random.Range(1, 11);//Рандомное число для выбора облака 1=Flash, 2=Trick, 3=Angel, 4..10=Normal
-            //short randomCloud = 1;
+            //short randomCloud = 3;
             if (!myGUI.timerGo && (randomCloud == 1)) goto rerunCloud;
             if(randomCloud==1){ //FlCloud
                 Cloud_Ver2.ver = 1;
 
                 Cloud_Ver2.flSound = true;
-                short randomTime = (short)Random.Range(10, 20); //Рандомное добавляемое время (max не включая)
-                if(randomTime > 18) randomTime = (short)Random.Range(20, 45);
-                if(randomTime > 43) randomTime = (short)Random.Range(45, 95);
+                short rand = (short)Random.Range(0, 1001);
+                short randomTime = (short)Random.Range(13, 22); //Рандомное добавляемое время (max не включая)
+                if(rand >= 600 && rand <= 610) randomTime = 66;
+                if(rand == 1000) randomTime = 95;
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
                 change = 2; 
@@ -78,20 +90,45 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                 Cloud_Ver2.start = true;
             }else if(randomCloud==2){ //TrCloud
                 Cloud_Ver2.ver = 2;
+
+                //
+                TrRerun: short random = (short)Random.Range(1, 4); // 1 = colorBombs, 2 = TortoiseBombs, 3 = time/2
+                if (!myGUI.timerGo && (random == 3)) goto TrRerun;
+                switch (random)
+                {
+                    case 1: change = 4; break;
+                    case 2: break;
+                    case 3: change = 5; break;
+                    default: Debug.Log("Недопустимое значение в TricksterHelp.cs -> TrickHelp(); "); goto TrRerun;
+                }
+                //
+
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
-
-
-
                 Cloud.SetActive(true);
                 Cloud_Ver2.start = true;
 
             }else if(randomCloud==3){ //AnCloud
                 Cloud_Ver2.ver = 3;
 
+                //
+                rerun: short random = (short)Random.Range(1, 4);
+                if (!myGUI.timerGo && (random == 1)) goto rerun;
+                if (!myGUI.stepGo && (random == 2)) goto rerun;
+                switch (random)
+                {
+                    case 1: change = 2; value = 20; //добавляет 20 сек
+                        break;
+                    case 2: change = 3; value = 10; //добавляет 10 шагов
+                        break;
+                    case 3: change = 6; //Поиск максимального пути
+                        break;
+                    default: Debug.Log("Недопустимое значение в TricksterHelp.cs -> TrickHelp(); "); goto rerun;
+                }
+                //
+                
                 CoolDown.fillAmount = 0.99f;//
                 isCoolDown = true;
-
                 Cloud.SetActive(true);
                 Cloud_Ver2.start = true;
             }else { //UsCloud

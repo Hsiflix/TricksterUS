@@ -44,21 +44,25 @@ public class Touchs : MonoBehaviour {
                     NumberOfStep++;
                     //Debug.Log(""+hit.collider.name);
                     NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
-                    if(NumberBall == "Cloud"){
+                    /*if(NumberBall == "Cloud"){
                         TricksterHelp.isCloud = true;
                         Cloud_Ver2.end = true;
-                    }else{
+                    }else{*/
+                    try{
                         next = GameObject.Find(NumberBall.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
                         Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
                         nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
-
+                        TargetWay.actCleaner = true;
+                    }catch{
+                        
+                    }
                         //Изменение кол-ва ходов
                         if (myGUI.stepGo)
                             myGUI.step--;
                         else
                             myGUI.step++;
                         //---------------------
-                    }
+                    //}
                 }
             }
         }
@@ -69,9 +73,14 @@ public class Touchs : MonoBehaviour {
             for (int i = 1; i < Spawn.MySize * Spawn.MySize + 1; i++)
             {
                 //Проверка завершения кручения щариков
-                testNext = GameObject.Find(i.ToString());
-                Ball testNexing = testNext.GetComponent<Ball>();
-                sumTest += testNexing.StepRot;
+                try{
+                    testNext = GameObject.Find(i.ToString());
+                    if(testNext!=null){
+                    Ball testNexing = testNext.GetComponent<Ball>();
+                    sumTest += testNexing.StepRot;}
+                }catch{
+                    Debug.Log(testNext);
+                }
                 //---------------------------------------------
                 //Проверка цвета шариков для завершения игры
                 if (Spawn.ArrColor[i] == Spawn.WinBall)

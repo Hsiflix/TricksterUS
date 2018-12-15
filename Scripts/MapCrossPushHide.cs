@@ -21,6 +21,11 @@ public class MapCrossPushHide : MonoBehaviour {
             lvl_cross = GameObject.Find(lvl_cross_name);
             lvl_cross.SetActive(false);
         }
+        if (lvl<5){
+            string lvl_cross_name = "lvlB1";
+            lvl_cross = GameObject.Find(lvl_cross_name);
+            lvl_cross.SetActive(false);
+        }
      
     }
 

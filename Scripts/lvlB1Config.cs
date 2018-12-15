@@ -4,7 +4,7 @@ using UnityEngine;
 
 //---------- Конфигурация уровня ----------
 
-public class lvl2Config : MonoBehaviour {
+public class lvlB1Config : MonoBehaviour {
 
     public Texture ballRender1; //sprite Ball1
     public Texture ballRender2; //sprite Ball2
@@ -31,8 +31,8 @@ public class lvl2Config : MonoBehaviour {
 
         Spawn.WinBall = 2; // Победный цвет: 1-blue, 2- yellow, 3- red, 4-green; 
 
-        BotX.BotOn = false; // Включение бота (не забудь включить кол-во ходов)
-        BotX.BotWin = 2; // Победный цвет бота: 1-blue, 2- yellow, 3- red, 4-green; 
+        BotX.BotOn = true; // Включение бота (не забудь включить кол-во ходов)
+        BotX.BotWin = 3; // Победный цвет бота: 1-blue, 2- yellow, 3- red, 4-green; 
 
         if (myGUI.timersecond != 0)
             myGUI.timerGo = true; // Запустить Таймер, не менять!

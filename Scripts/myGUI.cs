@@ -37,12 +37,17 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
     public float BalansWidth;
     public float BalansHeight;
 
+    private Camera cam;
+    private Color camColor;
+
     //======================================== СТАРТ ===============================================================
     public void Start()
     {
 
-        //Правка 10 июня 2018
-        //Конец правки 10 июня 2018
+        //Правка 26 ноября 2018
+        timerUp = false;
+        stepUp = false;
+        //Конец правки 26 ноября 2018
 
         //outline
         _image = outline.gameObject.GetComponent<Image>(); //Смена цвета
@@ -58,6 +63,9 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
             lolLoseTime = UnityEngine.Random.Range(10, 100);
             //Debug.Log(lolLoseTime);
         }
+
+        cam = GetComponent<Camera>();
+        camColor = cam.backgroundColor;
     }
 
     public void Pause()
@@ -156,10 +164,16 @@ public class myGUI : MonoBehaviour // -----TIMER + STEP-----
         if (timerGo && !Touchs.LOSE && timersecond <= 10)
         {
             myStyle.normal.textColor = Color.white;
+            cam.backgroundColor = camColor;
             for (int i = 11; i > 4; i -= 2)
-                if (timersecond == i)
+                if (timersecond == i){
                     myStyle.normal.textColor = Color.red;
-            if (timersecond < 4) myStyle.normal.textColor = Color.red;//
+                    cam.backgroundColor = Color.red;
+                }
+            if (timersecond < 4){
+                 myStyle.normal.textColor = Color.red;//
+                 cam.backgroundColor = Color.red;
+            }
         }
         if(!timerUp){
             if(timersecond < 1000)

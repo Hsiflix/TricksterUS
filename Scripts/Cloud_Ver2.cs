@@ -36,6 +36,21 @@ public class Cloud_Ver2 : MonoBehaviour {
 	}
 	
 	void Update () {
+
+		if (Input.GetMouseButtonDown(0)) // Если кнопку нажали
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    string Name = hit.collider.name;
+                    if(Name == "Cloud"){
+                        TricksterHelp.isCloud = true;
+                        Cloud_Ver2.end = true;
+					}
+				}
+			}
+
 		if(flSound){
 			flSound = false;
 			GetComponent<AudioSource>().Play();
@@ -53,7 +68,7 @@ public class Cloud_Ver2 : MonoBehaviour {
 					do
 						rat = (short)UnityEngine.Random.Range(-1,2);
 					while (rat == 0);
-					Debug.Log(rat);
+					//Debug.Log(rat);
 					this.x = 15*rat; //
 					break;
 				case 2: GetComponent<SpriteRenderer>().sprite = UsCloud; break;
@@ -86,20 +101,6 @@ public class Cloud_Ver2 : MonoBehaviour {
 						}
 						numerate++;
 					}
-					/*numerate++; // Меняется каждые 100-160 кадров на 3 кадра
-					if(trigger){
-						trigger = false;
-						randNum += UnityEngine.Random.Range(100,160);
-					}
-					if(!trigger){
-						if(numerate==randNum){
-							GetComponent<SpriteRenderer>().sprite = TrCloud;
-						}
-						if(numerate==randNum+3){
-							GetComponent<SpriteRenderer>().sprite = UsCloud;
-							trigger = true;
-						}
-					} */
 				
 					if(target.x > cameraPosition.x + 3) target.x += UnityEngine.Random.Range(-1.3f,1f);
 					else if (target.x < cameraPosition.x - 3) target.x += UnityEngine.Random.Range(-1f,1.3f);
