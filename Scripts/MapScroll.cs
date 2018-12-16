@@ -29,7 +29,21 @@ public class MapScroll : MonoBehaviour
         NameOf();
         ButLoadLvl._namelvl += "B1"; //B* - уровни с ботом в руинах
         WinMenuMoney.moneyAdd = 1000;
+        //_DustRuins.SetActive(true);
+    }
+    public void lvlB2(){
+        Debug.Log("lvlB2()");
+        NameOf();
+        ButLoadLvl._namelvl += "B2"; //B* - уровни с ботом в руинах
+        WinMenuMoney.moneyAdd = 1000;
         _DustRuins.SetActive(true);
+    }
+    public void lvlB3(){
+        Debug.Log("lvlB3()");
+        NameOf();
+        ButLoadLvl._namelvl += "B3"; //B* - уровни с ботом в руинах
+        WinMenuMoney.moneyAdd = 1000;
+        //_DustRuins.SetActive(true);
     }
     public void lvl1()
     {

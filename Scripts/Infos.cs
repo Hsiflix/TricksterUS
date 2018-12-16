@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class Infos : MonoBehaviour {
 
-    static private int lvl = 5; //ПОМЕНЯТЬ НА 0 уровень!!"
+    static private int lvl = 13; //ПОМЕНЯТЬ НА 0 уровень!!"
     static private int max_lvl = 18; 
     static private int money; ///ПОМЕНЯТЬ!"
     static private string info = "";

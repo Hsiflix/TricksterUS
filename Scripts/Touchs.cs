@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Touchs : MonoBehaviour {
 
     static public string NumberBall; // Название шарика по которому каснулись
     static public bool StartTouch = false; // Возможность касания
+    static public bool TortoiseB = false; // Режим черепаш-бола
     public GameObject next; // Шар для кручения
     public GameObject testNext; // Проверка данного шара на кручение
     public int sumTest; //Проверка завершения всех кручений
@@ -40,29 +42,55 @@ public class Touchs : MonoBehaviour {
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 100))
                 {
-                    StartTouch = false; // Остановка возможности касания
-                    NumberOfStep++;
-                    //Debug.Log(""+hit.collider.name);
-                    NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
-                    /*if(NumberBall == "Cloud"){
-                        TricksterHelp.isCloud = true;
-                        Cloud_Ver2.end = true;
-                    }else{*/
-                    try{
-                        next = GameObject.Find(NumberBall.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
-                        Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
-                        nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
-                        TargetWay.actCleaner = true;
-                    }catch{
-                        
+                    if(TortoiseB){
+                        StartTouch = false; // Остановка возможности касания
+                        NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
+                        try{
+                            //Debug.Log(TempBool.spawns[0] + " " + TempBool.spawns[1] + " " +TempBool.spawns[2]);
+                            //Debug.Log(NumberBall);
+                            if(Int32.Parse(NumberBall) == TempBool.spawns[0]){
+                                Tortoise.touchBall = TempBool.spawns[0];
+                                Tortoise.BoomFlag = true;
+                                TortoiseB = false;
+                            }else if(Int32.Parse(NumberBall) == TempBool.spawns[1]){
+                                Tortoise.touchBall = TempBool.spawns[1];
+                                Tortoise.BoomFlag = true;
+                                TortoiseB = false;
+                            }else if(Int32.Parse(NumberBall) == TempBool.spawns[2]){
+                                Tortoise.touchBall = TempBool.spawns[2];
+                                Tortoise.BoomFlag = true;
+                                TortoiseB = false;
+                            }else{
+                                Debug.Log("Tortoise not found");
+                            }
+                        }catch{
+                            
+                        }
+                    }else{
+                        StartTouch = false; // Остановка возможности касания
+                        NumberOfStep++;
+                        //Debug.Log(""+hit.collider.name);
+                        NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
+                        /*if(NumberBall == "Cloud"){
+                            TricksterHelp.isCloud = true;
+                            Cloud_Ver2.end = true;
+                        }else{*/
+                        try{
+                            next = GameObject.Find(NumberBall.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
+                            Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
+                            nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
+                            TargetWay.actCleaner = true;
+                        }catch{
+                            
+                        }
+                            //Изменение кол-ва ходов
+                            if (myGUI.stepGo)
+                                myGUI.step--;
+                            else
+                                myGUI.step++;
+                            //---------------------
+                        //}
                     }
-                        //Изменение кол-ва ходов
-                        if (myGUI.stepGo)
-                            myGUI.step--;
-                        else
-                            myGUI.step++;
-                        //---------------------
-                    //}
                 }
             }
         }

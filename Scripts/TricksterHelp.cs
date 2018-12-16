@@ -59,6 +59,9 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                     FindMaxWay.Inicializate = true;
                     FindMaxWay.Activate = true;
                     break;
+                case 7:
+                    TempBool.startTort = true;
+                    break;
             }
         }
 
@@ -97,7 +100,7 @@ public class TricksterHelp : MonoBehaviour { //Скрипт помощи доб�
                 switch (random)
                 {
                     case 1: change = 4; break;
-                    case 2: break;
+                    case 2: change = 7; break;
                     case 3: change = 5; break;
                     default: Debug.Log("Недопустимое значение в TricksterHelp.cs -> TrickHelp(); "); goto TrRerun;
                 }

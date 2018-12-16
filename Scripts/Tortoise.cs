@@ -2,39 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ColorBallv2 : MonoBehaviour {
-
-    static public bool ColorBallOn = false;
+public class Tortoise : MonoBehaviour {
     private int ExplosionBallNow;
+    private int centerBall;
     private GameObject ExplosionBall;
+    private GameObject centerBallGO;
+    public GameObject tort1;
+    public GameObject tort2;
     private int ColorExplosion;
-    private int TimeNow;
-    static public int TimeForExplosion;
-    static public int StockTime;
-    private int SaveTime = - 10;
+    static public int touchBall;
     public GameObject myBombAnim;
-    private bool BoomFlag = false;
-    public bool badTrickB;
-    private int ExplTimeTest;
+    static public bool BoomFlag = false;
+    public bool Delete = false;
+    public bool badTrickB = true;
     public int number;
-    static public int now = -1;
-
     public Sprite ballRender1; //sprite Ball1
     public Sprite ballRender2; //sprite Ball2
     public Sprite ballRender3; //sprite Ball3
     public Sprite ballRender4; //sprite Ball4
     private Sprite ballRender; //sprite
+    public Sprite tortBall; 
 
     private void Start()
     {
-        //Правка 10 июня 2018
-        //Debug.Log("ColorBall");
-        TimeNow = myGUI.timersecond;
-        SaveTime = -10;
         BoomFlag = false;
-        if (Spawn.timerseconds == 0) ExplTimeTest = TimeForExplosion;
-        else ExplTimeTest = Spawn.timerseconds - TimeForExplosion;
-        //Конец правки 10 июня 2018
+        badTrickster();
     }
 
     public void badTrickster(){
@@ -46,15 +38,22 @@ public class ColorBallv2 : MonoBehaviour {
             if (badTrickB)
             {
                 badTrickB = false;
-                if (Spawn.timerseconds == 0) ExplTimeTest += TimeForExplosion;
-                else ExplTimeTest -= TimeForExplosion;
-                TimeNow = myGUI.timersecond;
-                ColorExplosion = Random.Range(1, 5);
-                while (ColorExplosion == Spawn.WinBall)
-                {
-                    ColorExplosion = Random.Range(1, 5);
+
+                ExplosionBallNow = Random.Range(1, Spawn.MySize * (Spawn.MySize - 2) - 1); // Левый нижний край взрыва
+
+                int[] other = new int[2];
+                if(number == 1){
+                    other[0] = TempBool.spawns[0] - Spawn.MySize - 1; other[1] = 0;
+                }else if(number == 2){
+                    other[0] = TempBool.spawns[1] - Spawn.MySize - 1; other[1] = TempBool.spawns[0] - Spawn.MySize - 1;//
                 }
-                switch (ColorExplosion) {
+
+                while (ExplosionBallNow % Spawn.MySize == 0 || ExplosionBallNow % Spawn.MySize == Spawn.MySize - 1 || ExplosionBallNow == other[0] || ExplosionBallNow == other[1])
+                    ExplosionBallNow = Random.Range(1, Spawn.MySize * (Spawn.MySize - 2) - 1); // Левый нижний край взрыва
+
+				ColorExplosion = Spawn.ArrColor[ExplosionBallNow + Spawn.MySize + 1];
+
+				switch (ColorExplosion) {
                     case 1:
                         ballRender = ballRender1;
                         break;
@@ -70,38 +69,61 @@ public class ColorBallv2 : MonoBehaviour {
                     default:
                         Debug.Log("Error ColorExplosion: " + ColorExplosion);
                         break;
-                }
+				}
 
-                ExplosionBallNow = Random.Range(1, Spawn.MySize * (Spawn.MySize - 2) - 1); // Левый нижний край взрыва
 
-                int[] other = new int[2];
-                if(number == 1){
-                    other[0] = TempBool.spawns[0]; other[1] = 0;
-                }else if(number == 2){
-                    other[0] = TempBool.spawns[1]; other[1] = TempBool.spawns[0];
-                }
+                //
+                centerBall = ExplosionBallNow + Spawn.MySize + 1;
+                centerBallGO = GameObject.Find(centerBall.ToString());
+                centerBallGO.GetComponent<SpriteRenderer>().sprite = tortBall;
+                //
+                TempBool.spawns[number] = centerBall;
 
-                while (ExplosionBallNow % Spawn.MySize == 0 || ExplosionBallNow % Spawn.MySize == Spawn.MySize - 1 || ExplosionBallNow == other[0] || ExplosionBallNow == other[1])
-                    ExplosionBallNow = Random.Range(1, Spawn.MySize * (Spawn.MySize - 2) - 1); // Левый нижний край взрыва
-
-                TempBool.spawns[number] = ExplosionBallNow;
+                //Debug.Log(centerBall);
 
                 ExplosionBall = GameObject.Find(ExplosionBallNow.ToString());
                 myBombAnim.transform.position = ExplosionBall.transform.position + new Vector3(0.9f, 0.9f, 0.9f);
-                myBombAnim.SetActive(true);
-                SaveTime = myGUI.timersecond;
-                BoomFlag = true;
+                Touchs.TortoiseB = true;
             }
-        if((Spawn.timerseconds == 0 && myGUI.timersecond - SaveTime == 8 || SaveTime - myGUI.timersecond == 8)&& BoomFlag)
-        {
+
+        if(BoomFlag){
             BoomFlag = false;
             badTrickB = false;
-            Boom();
+            ExplosionBallNow = touchBall - 1 - Spawn.MySize;
+            Boom();//
+        }
+
+        if(Delete){
+            Delete = false;
+            switch (Spawn.ArrColor[centerBall]) {
+                case 1:
+                    ballRender = ballRender1;
+                break;
+                case 2:
+                    ballRender = ballRender2;
+                    break;
+                case 3:
+                    ballRender = ballRender3;
+                    break;
+                case 4:
+                    ballRender = ballRender4;
+                    break;
+                default:
+                    Debug.Log("Error ColorExplosion: " + ColorExplosion);
+                    break;
+            }
+            centerBallGO.GetComponent<SpriteRenderer>().sprite = ballRender;
+            BoomFlag = false;
+            TempBool.spawns[0] = 0;
+            TempBool.spawns[1] = 0;
+            TempBool.spawns[2] = 0;
+            myBombAnim.SetActive(false);
         }
     }
 
     private void Boom()
     {
+        Debug.Log(number);
         for (int i = 0; i < 3; i++)
         {
             ExplosionBall = GameObject.Find(ExplosionBallNow.ToString());
@@ -136,6 +158,9 @@ public class ColorBallv2 : MonoBehaviour {
             }
             ExplosionBallNow++;
         }
-        myBombAnim.SetActive(false);
+        //Debug.Log(TempBool.spawns[0] + " " + TempBool.spawns[1] + " " +TempBool.spawns[2]);
+        Delete = true;
+        tort1.GetComponent<Tortoise>().Delete = true;
+        tort2.GetComponent<Tortoise>().Delete = true;
     }
 }
