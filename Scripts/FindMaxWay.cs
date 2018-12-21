@@ -5,7 +5,6 @@ using System;
 
 public class FindMaxWay : MonoBehaviour {
 
-    private GameObject next; // Шар для кручения
     static public int BotWin;
     //private int PlayerQu = 0;
     //private int BotQu = 0;
@@ -217,7 +216,6 @@ public class FindMaxWay : MonoBehaviour {
 
     void ColorReplacement(int present, int color)
     {
-        next = GameObject.Find(present.ToString());
         switch (color) {
             case 1:
                 ArrColorBot[present] = 1;

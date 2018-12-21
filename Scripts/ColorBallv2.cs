@@ -29,7 +29,6 @@ public class ColorBallv2 : MonoBehaviour {
     {
         //Правка 10 июня 2018
         //Debug.Log("ColorBall");
-        TimeNow = myGUI.timersecond;
         SaveTime = -10;
         BoomFlag = false;
         if (Spawn.timerseconds == 0) ExplTimeTest = TimeForExplosion;
@@ -48,7 +47,6 @@ public class ColorBallv2 : MonoBehaviour {
                 badTrickB = false;
                 if (Spawn.timerseconds == 0) ExplTimeTest += TimeForExplosion;
                 else ExplTimeTest -= TimeForExplosion;
-                TimeNow = myGUI.timersecond;
                 ColorExplosion = Random.Range(1, 5);
                 while (ColorExplosion == Spawn.WinBall)
                 {

@@ -92,7 +92,7 @@ public class Infos : MonoBehaviour {
     public static void Save()
     {
         info = lvl.ToString() + "*" + money.ToString() + "*" + AudioOn.ToString() + "*";
-        Debug.Log(info);
+        //Debug.Log(info);
         BinaryFormatter bf = new BinaryFormatter();
         //Application.persistentDataPath это строка; выведите ее в логах и вы увидите расположение файла сохранений
         FileStream file = File.Create(Application.persistentDataPath + "/savedGames.gd");

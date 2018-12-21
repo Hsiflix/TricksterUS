@@ -9,10 +9,10 @@ public class AudioSourseOnOff : MonoBehaviour {
 	void Start(){
 		Audio = GetComponent<AudioSource>();
 		if(AudioSourse){
-			Debug.Log("Audio.volume = 0.5f;");
+			//Debug.Log("Audio.volume = 0.5f;");
 			Audio.volume = 0.5f;
 		} else {
-			Debug.Log("Audio.volume = 0f;");
+			//Debug.Log("Audio.volume = 0f;");
 			Audio.volume = 0f;
 		}
 	}
@@ -20,10 +20,10 @@ public class AudioSourseOnOff : MonoBehaviour {
 	static public void ChangeAudioSourseOnOff(bool Ch = true){
 		AudioSourse = Ch;
 		if(AudioSourse){
-			Debug.Log("Audio.volume = 0.5f;");
+			//Debug.Log("Audio.volume = 0.5f;");
 			Audio.volume = 0.3f;
 		} else {
-			Debug.Log("Audio.volume = 0f;");
+			//Debug.Log("Audio.volume = 0f;");
 			Audio.volume = 0f;
 		}
 	}
