@@ -18,9 +18,11 @@ public class BotX : MonoBehaviour {
     private int NextBall;
     private int NextBall1;
     private bool Rotating, Rotating1;
+    static public bool your_turnn = false;
     static public bool BotOn;
     static public bool Way2 = false;
     static public bool Way2True = false;
+    static public bool startBot;
 
     public void Restart()
     {
@@ -75,9 +77,16 @@ public class BotX : MonoBehaviour {
 
     private void Update()
     {
+        if  (Touchs.StartTouch && your_turnn){
+            Touchs.StartTouch = false;
+        }
         if (Touchs.StartTouch && Touchs.NumberOfStep % 2 == 0)
         {
-            Touchs.StartTouch = false;
+            CanvasBot.opponent_turn_bt = true;
+        }
+        if(startBot){
+            your_turnn = true;
+            startBot = false;
             Touchs.NumberOfStep = 1;
             if (access)
             {
@@ -116,8 +125,6 @@ public class BotX : MonoBehaviour {
                     if(!Way2True){
                         goto Restart;
                     }
-                    //Debug.Log("(QueMas[maxj] == 0)");
-                    //Debug.Log(Spawn.ArrColor[maxj]);
                     while(Spawn.ArrColor[maxj] == BotWin) {
                         maxj = UnityEngine.Random.Range(1, Spawn.MySize * Spawn.MySize);
                         Debug.Log(maxj);

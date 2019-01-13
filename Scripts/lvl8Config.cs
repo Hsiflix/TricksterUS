@@ -24,6 +24,7 @@ public class lvl8Config : MonoBehaviour {
         Spawn.MySize = 8; // Размер поля
         Spawn.RestartLvl(); // Функция перезагрузки
         ColorBall.ColorBallOn = false; //Включение ColorBall'а
+        TempBool.startLvlTort = false; //Включение TortBall'а
         ColorBall.TimeForExplosion = 10; //Время между взрывами ColorBall'а (БОЛЬШЕ 9!!!)
 
         StatBall.StatArr = new int[] { 11, 12, 13, 14, 17, 18, 19, 22, 23, 24, 33, 34, 35, 38, 39, 40, 43, 44, 45, 46 };

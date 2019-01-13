@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 
 public class DustRuins : MonoBehaviour {
 
@@ -21,9 +21,11 @@ public class DustRuins : MonoBehaviour {
 	private short sequence = 0;
 	public GUIStyle myStyle;
 	public Texture2D aTexture;
+	private bool loadLvl = false;
 
-	// Use this for initialization //
+	// Use this for initialization
 	void Start () {
+		loadLvl = false;
 		levers = new GameObject[6];
 		for (int i=0; i<6; i++){
 			string name = "lever_";
@@ -65,16 +67,13 @@ public class DustRuins : MonoBehaviour {
 
 		//GUI.skin.button.active.background = aTexture;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	private void Access(){
-		foreach (char a in "012345"){
-			usyms[Int32.Parse(a.ToString())].SetActive(true);
-		}
+		//foreach (char a in "012345"){
+		//	usyms[Int32.Parse(a.ToString())].SetActive(true);
+		//}
+		StartCoroutine("Animat");
+		loadLvl = true;
 	}
 
 	private void dumpSyms(){
@@ -85,7 +84,7 @@ public class DustRuins : MonoBehaviour {
 
 	void OnGUI()
     {
-		GUI.skin.button.active.background = aTexture;
+		//GUI.skin.button.active.background = aTexture;
 		if(GUI.Button(new Rect(375 / BalansWidth, 250 / BalansHeight, 110 / BalansWidth, 130 / BalansHeight), "", myStyle)){ //Left lever
 			switch (leftLeverPos){
 				case 1: leftLeverPos = 2; levers[0].SetActive(false); levers[1].SetActive(true); break;
@@ -94,12 +93,14 @@ public class DustRuins : MonoBehaviour {
 			}
 			switch(sequence){
 				case 0: sequence = 1; syms[0].SetActive(true); break;
-				case 1: sequence = 0; dumpSyms(); break;
-				case 2: sequence = 3; syms[2].SetActive(true); break;
-				case 3: sequence = 0; dumpSyms(); break;
-				case 4: sequence = 5; syms[3].SetActive(true); break;
-				case 5: sequence = 0; dumpSyms(); break;
-				case 6: sequence = 0; dumpSyms(); break;
+				case 1: sequence = 2; break;
+				case 2: sequence = 0; dumpSyms(); break;
+				case 3: sequence = 4; break;
+				case 4: sequence = 0; dumpSyms(); break;
+				case 5: sequence = 6; syms[3].SetActive(true); break;
+				case 6: sequence = 7; break;
+				case 7: sequence = 0; dumpSyms(); break;
+				case 8: sequence = 0; dumpSyms(); break;
 			}
 		};
 		if(GUI.Button(new Rect(815 / BalansWidth, 250 / BalansHeight, 110 / BalansWidth, 130 / BalansHeight), "", myStyle)){ //Right lever
@@ -110,12 +111,14 @@ public class DustRuins : MonoBehaviour {
 			}
 			switch(sequence){
 				case 0: sequence = 0; dumpSyms(); break;
-				case 1: sequence = 2; syms[1].SetActive(true); break;
-				case 2: sequence = 0; dumpSyms(); break;
+				case 1: sequence = 0; dumpSyms(); break;
+				case 2: sequence = 3; syms[1].SetActive(true); break;
 				case 3: sequence = 0; dumpSyms(); break;
 				case 4: sequence = 0; dumpSyms(); break;
-				case 5: sequence = 6; syms[4].SetActive(true); Access(); break;
+				case 5: sequence = 0; dumpSyms(); break;
 				case 6: sequence = 0; dumpSyms(); break;
+				case 7: sequence = 8; syms[4].SetActive(true); Access(); break;
+				case 8: sequence = 0; dumpSyms(); break;
 			}
 
 		};
@@ -128,11 +131,28 @@ public class DustRuins : MonoBehaviour {
 				case 0: sequence = 0; dumpSyms(); break;
 				case 1: sequence = 0; dumpSyms(); break;
 				case 2: sequence = 0; dumpSyms(); break;
-				case 3: sequence = 4;  break;
-				case 4: sequence = 0; dumpSyms(); break;
+				case 3: sequence = 0; dumpSyms(); break;
+				case 4: sequence = 5; syms[2].SetActive(true); break;
 				case 5: sequence = 0; dumpSyms(); break;
 				case 6: sequence = 0; dumpSyms(); break;
+				case 7: sequence = 0; dumpSyms(); break;
+				case 8: sequence = 0; dumpSyms(); break;
+			}
+		};
+		if(GUI.Button(new Rect(585 / BalansWidth, 445 / BalansHeight, 115 / BalansWidth, 255 / BalansHeight), "", myStyle)){ //Central button
+			//Debug.Log("//Central button");
+			if(loadLvl){
+        		SceneManager.LoadScene("lvlB2");
 			}
 		};
 	}
+
+    IEnumerator Animat()
+    {
+		foreach (char a in "012345"){
+			usyms[Int32.Parse(a.ToString())].SetActive(true);
+			yield return new WaitForSeconds(0.2f);
+		}
+	}
+
 }

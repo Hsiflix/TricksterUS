@@ -69,25 +69,20 @@ public class Touchs : MonoBehaviour {
                     }else{
                         StartTouch = false; // Остановка возможности касания
                         NumberOfStep++;
-                        //Debug.Log(""+hit.collider.name);
                         NumberBall = hit.collider.name; // Записывает имя шарика по которому каснулись
-                        /*if(NumberBall == "Cloud"){
-                            TricksterHelp.isCloud = true;
-                            Cloud_Ver2.end = true;
-                        }else{*/
                         try{
                             next = GameObject.Find(NumberBall.ToString()); // Ищем этот шарик среди наших и записываем в "next" его Gameobject
                             Ball nexing = next.GetComponent<Ball>(); // Получаем скрипт для прокрутки шара, которого мы коснулись
                             nexing.StepRot = Ball.Speed; // Начинаем крутить шар, до которого каснулись
                             TargetWay.actCleaner = true;
-                        }catch{
-                            
-                        }
                             //Изменение кол-ва ходов
                             if (myGUI.stepGo)
                                 myGUI.step--;
                             else
                                 myGUI.step++;
+                        }catch{
+                            
+                        }
                             //---------------------
                         //}
                     }
@@ -114,10 +109,16 @@ public class Touchs : MonoBehaviour {
                 if (Spawn.ArrColor[i] == Spawn.WinBall)
                     sumWin++;
                 //-----------------------------------------
+                
                 if (i == Spawn.MySize * Spawn.MySize)
                 {
                     if (sumTest == 0) //Если шарики закончили крутиться
+                        if (BotX.your_turnn){
+                            StartTouch = false;//
+                        CanvasBot.your_turn_bt = true;
+                    }else{
                         StartTouch = true;
+                    }
                     else sumTest = 0;
                     //--------------------------------------------------------------------------
                     if (sumWin == Spawn.MySize * Spawn.MySize) //Если все шарики победного цвета

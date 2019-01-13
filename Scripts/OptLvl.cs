@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class OptLvl : MonoBehaviour {
-
-	public Animation _anim;
 	public Animator _animator;
 
 	// Use this for initialization

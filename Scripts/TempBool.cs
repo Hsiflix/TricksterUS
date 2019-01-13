@@ -13,16 +13,32 @@ public class TempBool : MonoBehaviour {
 
 	static public bool start = false;
 	static public bool startTort = false;
+	static public bool startLvlTort = false;
+	private bool Start = true;
 	private IEnumerator[] coroutine = new IEnumerator[3];
 	static public int[] spawns = {0,0,0};
+	private int randomTime = 0;
 
 	void Update(){
+		if(Start){
+			Start = false;
+			if(myGUI.timerGo){
+				randomTime = Random.Range(5, myGUI.timersecond - 5);
+			} else {
+				randomTime = Random.Range(10, 50);
+			}
+			Debug.Log(randomTime);
+		}
 		if(start){
 			start = false;
 			tapColorBall();
 		}
 		if(startTort){
 			startTort = false;
+			tapTortBall();
+		}
+		if((myGUI.timersecond == randomTime) && startLvlTort){
+			startLvlTort = false;
 			tapTortBall();
 		}
 	}

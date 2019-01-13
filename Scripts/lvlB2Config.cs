@@ -2,38 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//---------- Конфигурация уровня ----------
-
-public class lvl13Config : MonoBehaviour {
+public class lvlB2Config : MonoBehaviour {
 
     public Texture ballRender1; //sprite Ball1
     public Texture ballRender2; //sprite Ball2
     public Texture ballRender3; //sprite Ball3
     public Texture ballRender4; //sprite Ball4
-    //public int Field_SIZE = 10; // Размер поля
 
-    //static public void Restart() // Установка таймера и ходов на начальные значения
-    //{
-    //    myGUI.timersecond = 0; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
-    //    myGUI.step = 10; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
-    //    ColorBall.StockTime = myGUI.timersecond; //Установка начального времени дял ColorBall, что бы при нем не взрывался, не менять!
-    //}
     void Start() {
-        Spawn.steps = 15; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
-        Spawn.timerseconds = 50; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
-        Spawn.MySize = 6; // Размер поля
+        Spawn.steps = 0; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
+        Spawn.timerseconds = 60; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
+        Spawn.MySize = 9; // Размер поля
         Spawn.RestartLvl(); // Функция перезагрузки
-        ColorBall.ColorBallOn = true; //Включение ColorBall'а
+        ColorBall.ColorBallOn = false; //Включение ColorBall'а
         TempBool.startLvlTort = false; //Включение TortBall'а
-        ColorBall.TimeForExplosion = 9; //Время между взрывами ColorBall'а (БОЛЬШЕ 9!!!)
+        ColorBall.TimeForExplosion = 10; //Время между взрывами ColorBall'а (БОЛЬШЕ 9!!!)
 
-        StatBall.StatArr = new int[] { 1, 2, 3, 4, 14};
-        StatBall.StatBallOn = false; //Включение StatBall'a
+        StatBall.StatArr = new int[] {37,38,39,40,41,42,43,44,45};
+        StatBall.StatBallOn = true; //Включение StatBall'a
 
-        Spawn.WinBall = 1; // Победный цвет: 1-blue, 2- yellow, 3- red, 4-green; 
+        Spawn.WinBall = 2; // Победный цвет: 1-blue, 2- yellow, 3- red, 4-green; 
 
-        BotX.BotOn = false; // Включение бота (не забудь включить кол-во ходов)
-        BotX.BotWin = 3; // Победный цвет бота: 1-blue, 2- yellow, 3- red, 4-green; 
+        BotX.BotOn = true; // Включение бота (не забудь включить кол-во ходов)
+        BotX.BotWin = 4; // Победный цвет бота: 1-blue, 2- yellow, 3- red, 4-green; 
 
         if (myGUI.timersecond != 0)
             myGUI.timerGo = true; // Запустить Таймер, не менять!
