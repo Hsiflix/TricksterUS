@@ -28,6 +28,10 @@ public class info : MonoBehaviour
         ballColors = new int[4];
         timerText = GameObject.Find("Timer").GetComponent<Text>();
         stepsText = GameObject.Find("Steps").GetComponent<Text>();
+        if(steps < 1000) stepsText.text = ""+steps;
+            else stepsText.text = "999+";
+        if(timersecond < 1000) timerText.text = ""+timersecond;
+            else timerText.text = "999+";
     }
 
     static public void setNextColor(int color){

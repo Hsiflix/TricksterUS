@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class touch : MonoBehaviour
 {
     private string objectTouch = "";
+    public GameObject PauseMenu;
 
     void Start()
     {
@@ -41,5 +43,15 @@ public class touch : MonoBehaviour
                 }
             }    
         }               
+    }
+
+    public void PauseButton(){
+        Time.timeScale = 0;
+        PauseMenu.SetActive(true);
+        GameObject.Find("Game").SetActive(false);
+    }
+
+    public void RebootButton(){
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

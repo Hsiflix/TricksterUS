@@ -8,17 +8,19 @@ public class tortoiseBall : MonoBehaviour
 {
     static public int timeForExplosion = 0;
     static public int quantity = 0;
+    private int quantityAll = 0;
     private float secondgametime = 0f;
     private int timersecond = 1;
     private bool active = false;
-    private int[] balls;
-    private int[] ballsColor;
+    public bool noTrick = true;
     private int[] listOfBoom;
     private string objectTouch = "";
+    private List<int> balls = new List<int>();
+    private List<int> ballsColor = new List<int>();
 
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -33,7 +35,7 @@ public class tortoiseBall : MonoBehaviour
                 {
                     objectTouch = hit.collider.name; // Записывает имя объекта по которому каснулись
                     try{
-                        for (int i = 0; i < quantity; i++)
+                        for (int i = 0; i < quantityAll; i++)
                         {
                             if(""+balls[i]==objectTouch){
                                 StartCoroutine(BoomIE(balls[i], ballsColor[i]));
@@ -52,21 +54,18 @@ public class tortoiseBall : MonoBehaviour
             secondgametime = 0;
             timersecond++;
         }
-        if(timersecond%timeForExplosion==0 && !active){
-            listOfBoom = new int[9];
-            Boom();
+        if(timersecond%timeForExplosion==0 && !active && noTrick){
+            Boom(quantity);
         }
     }
-    void Boom(){
-        balls = new int[quantity];
-        ballsColor = new int[quantity];
-        for (int i = 0; i < quantity; i++){
+    public void Boom(int quantityS){
+        quantityAll += quantityS;
+        for (int i = 0; i < quantityS; i++){
             repeat: int ball = Random.Range(0, spawn.field_size*spawn.field_size);
             if(GameObject.Find(""+ball).GetComponent<ball>().busy) goto repeat;
-            balls[i] = ball;
-            ballsColor[i] = spawn.ArrColor[ball];
+            balls.Add(ball);
+            ballsColor.Add(spawn.ArrColor[ball]);
             GameObject.Find(""+ball).GetComponent<ball>().busy = true;
-            //Debug.Log(""+ball);
             GameObject.Find(""+ball).GetComponent<SpriteRenderer>().sprite = info.ball_tort;
             active = true;
             info.activeTouch = false;
@@ -85,7 +84,8 @@ public class tortoiseBall : MonoBehaviour
     }
 
     IEnumerator BoomIE(int nameInt, int color){
-        for (int i = 0; i < quantity; i++){
+        listOfBoom = new int[9];
+        for (int i = 0; i < quantityAll; i++){
             SwitchColor(balls[i], ballsColor[i]);
         }
         yield return new WaitForSeconds(0.001f);
@@ -131,11 +131,14 @@ public class tortoiseBall : MonoBehaviour
                 info.ballColors[color]++;
             }
         }
-        for (int i = 0; i < quantity; i++){
+        for (int i = 0; i < quantityAll; i++){
             GameObject.Find(""+balls[i]).GetComponent<ball>().busy = false;
         }
 
         timersecond = 1;
+        quantityAll = 0;
+        balls = new List<int>();
+        ballsColor = new List<int>();
         active = false;
         info.activeTouch = true;
     }

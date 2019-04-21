@@ -9,11 +9,24 @@ public class ball : MonoBehaviour
     private int myNameInt;
     private int stepRot = 0;
     private int speed = 16;
+    private bool rotNext = true;
     public bool busy = false;
     
     void Start()
     {
-        
+        try{
+            myNameInt = Int32.Parse(transform.name);
+        }catch{
+            myNameInt = -1;
+        }
+    }
+
+    public void RotateBall(int count){
+        rotNext = false;
+        stepRot += speed * count;
+        spawn.ArrWay[myNameInt] += count;
+        if (spawn.ArrWay[myNameInt] > 3)
+            spawn.ArrWay[myNameInt] -= 4;
     }
     
     void Update()
@@ -22,7 +35,6 @@ public class ball : MonoBehaviour
             touchThis = false;
             if(!busy){
                 info.queue++;
-                myNameInt = Int32.Parse(transform.name);
                 wayUp();
                 setColor();
                 stepRot += speed;
@@ -34,7 +46,8 @@ public class ball : MonoBehaviour
             stepRot--;
             transform.Rotate(Vector3.Lerp(new Vector3(+0f, +0f, +0f), new Vector3(+0f, +0f, -90f), 0.0625f));
             if (stepRot == 0){
-                StartCoroutine(queue());
+                if(rotNext) StartCoroutine(queue());
+                else rotNext = true;
             }
         }
     }

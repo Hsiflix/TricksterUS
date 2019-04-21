@@ -20,8 +20,10 @@ public class lvl2config : MonoBehaviour
         GetComponent<colorBall>().enabled = false; //Вкл ColorBall'а
 
         tortoiseBall.timeForExplosion = 15; //Время между взрывами TortoiseBall'а  [9...]
-        tortoiseBall.quantity = 1; //Кол-во TortoiseBall'а
+        tortoiseBall.quantity = 2; //Кол-во TortoiseBall'а
         GetComponent<tortoiseBall>().enabled = false; //Вкл TortoiseBall'а
+
+        GetComponent<trickHelp>().quantity = 5; //Кол-во облаков (Мб сделать случайным?)
 
         //BotX.BotOn = false; // Включение бота (не забудь включить кол-во ходов)
         //BotX.BotWin = 2; // Победный цвет бота: 1-blue, 2- yellow, 3- green, 4-red; 
@@ -34,11 +36,11 @@ public class lvl2config : MonoBehaviour
         if (info.timersecond > 0){ //Вкл таймер
             info.timerGo = true;
         }
-        if(info.steps < 1000) info.stepsText.text = ""+info.steps;
-            else info.stepsText.text = "999+";
-        if(info.timersecond < 1000) info.timerText.text = ""+info.timersecond;
-            else info.timerText.text = "999+";
+
+        if(GetComponent<tortoiseBall>().enabled)
+            GetComponent<tortoiseBall>().noTrick = true;
 
         GetComponent<spawn>().enabled = true;
+
     }
 }

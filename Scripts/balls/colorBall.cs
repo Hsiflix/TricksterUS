@@ -27,12 +27,14 @@ public class colorBall : MonoBehaviour
         }
         if(timersecond%timeForExplosion==9) active = true;
         if(timersecond%timeForExplosion==0 && active){
-            active = false;
-            listOfBoom = new int[quantity][];
+            //active = false;
+            //listOfBoom = new int[quantity][];
             Boom();
         }
     }
-    void Boom(){
+    public void Boom(){
+        active = false;
+        listOfBoom = new int[quantity][];
         balls = new GameObject[quantity];
         for (int i = 0; i < quantity; i++){
             repeat:
@@ -58,8 +60,10 @@ public class colorBall : MonoBehaviour
     }
 
     IEnumerator BoomIE(int color, int nameInt, int number){
+        yield return new WaitForSeconds(7.2f);
+        GameObject.Find(nameInt+"C").transform.position = new Vector3 (GameObject.Find(nameInt+"C").transform.position.x,GameObject.Find(nameInt+"C").transform.position.y,-5.5f);
         listOfBoom[number] = new int[9];
-        yield return new WaitForSeconds(8f);
+        yield return new WaitForSeconds(0.8f);
         listOfBoom[number][0] = nameInt-info.field_size-1;
         listOfBoom[number][1] = nameInt-info.field_size;
         listOfBoom[number][2] = nameInt-info.field_size+1;
@@ -71,8 +75,10 @@ public class colorBall : MonoBehaviour
         listOfBoom[number][8] = nameInt+info.field_size+1;
         
         for (int i = 0; i < 9; i++){
-            //Debug.Log(info.stat_balls.Contains(0));
-            if(listOfBoom[number][i] < 0 || listOfBoom[number][i] >= info.field_size*info.field_size || info.stat_balls.Contains(listOfBoom[number][i])){
+            if(listOfBoom[number][i] < 0 || 
+            listOfBoom[number][i] >= info.field_size*info.field_size || 
+            info.stat_balls.Contains(listOfBoom[number][i]) ||
+            GameObject.Find(""+listOfBoom[number][i]).GetComponent<ball>().busy){
                 listOfBoom[number][i] = -1;
             }
         }
