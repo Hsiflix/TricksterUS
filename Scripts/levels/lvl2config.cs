@@ -9,8 +9,8 @@ public class lvl2config : MonoBehaviour
     void Start()
     {
         spawn.field_size = 4; //Размер поля
-        info.steps = 100; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
-        info.timersecond = 180; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
+        info.steps = 10; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
+        info.timersecond = 30; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
         info.winBall = 3; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
         
         info.stat_balls = new int[] {}; //Статичные шарики [0..spawn.field_size*spawn.field_size]

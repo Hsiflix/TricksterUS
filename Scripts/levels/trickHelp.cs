@@ -77,16 +77,43 @@ public class trickHelp : MonoBehaviour
             Active = false;
             isCoolDown = true;
             CoolDownImage.fillAmount = 0.99f;
-
             clouds = new GameObject[quantity];
-            for (int i = 0; i < quantity; i++){
-                clouds[i] = Instantiate(cloudPrefab, Camera.main.transform.position - new Vector3(0f, 7.5f+(i*1.5f), -3f), Quaternion.Euler(0, 0, 0));
-                clouds[i].name = "Cloud_"+i;
-                int typeS = UnityEngine.Random.Range(1, 5);
-                //int typeS = 1;
-                int modeS = UnityEngine.Random.Range(1, 8);
-                int valueS = UnityEngine.Random.Range(1, 20);
-                GameObject.Find(clouds[i].name).GetComponent<cloud>().Initialize(typeS, modeS, valueS);
+            int isOnlyFlash = UnityEngine.Random.Range(1, 6); //(1, 6) - в 20% случаях будут только flash, иначе us или angel
+            if(isOnlyFlash == 1){
+                for (int i = 0; i < quantity; i++){
+                    clouds[i] = Instantiate(cloudPrefab, Camera.main.transform.position - new Vector3(0f, 7.5f+(i*1.5f), -3f), Quaternion.Euler(0, 0, 0));
+                    clouds[i].name = "Cloud_"+i;
+                    int typeS = 1; //1=Flash
+                    int trickS = UnityEngine.Random.Range(1, 6);
+                    int modeS = 0; // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
+                    int valueS = 0;
+                    if(trickS != 1){
+                        modeS = UnityEngine.Random.Range(1, 4); // 1 - AddStep, 2 - AddTime, 3 - Rotate
+                        valueS = UnityEngine.Random.Range(20, 35);
+                    }else modeS = UnityEngine.Random.Range(5, 9);
+                    GameObject.Find(clouds[i].name).GetComponent<cloud>().Initialize(typeS, modeS, trickS, valueS);
+                }
+            }else{
+                for (int i = 0; i < quantity; i++){
+                    clouds[i] = Instantiate(cloudPrefab, Camera.main.transform.position - new Vector3(0f, 7.5f+(i*1.5f), -3f), Quaternion.Euler(0, 0, 0));
+                    clouds[i].name = "Cloud_"+i;
+                    int typeS = UnityEngine.Random.Range(2, 4); //1=Flash, 2=Angel, 3=Us
+                    int trickS = UnityEngine.Random.Range(1, 5);
+                    int modeS = 0; // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
+                    int valueS = 0;
+                    if(trickS != 1){
+                        switch (typeS)
+                        {
+                            case 2: modeS = UnityEngine.Random.Range(1, 5); // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay
+                                    valueS = UnityEngine.Random.Range(15, 30);
+                                break;
+                            case 3: modeS = UnityEngine.Random.Range(1, 4); // 1 - AddStep, 2 - AddTime, 3 - Rotate
+                                    valueS = UnityEngine.Random.Range(10, 20);
+                                break;
+                        }
+                    }else modeS = UnityEngine.Random.Range(5, 9);
+                    GameObject.Find(clouds[i].name).GetComponent<cloud>().Initialize(typeS, modeS, trickS, valueS);
+                }
             }
         }
     }

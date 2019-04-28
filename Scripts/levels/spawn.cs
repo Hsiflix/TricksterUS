@@ -24,6 +24,11 @@ public class spawn : MonoBehaviour
 
     void Start()
     {
+        if(info.steps < 1000) info.stepsText.text = ""+info.steps;
+            else info.stepsText.text = "999+";
+        if(info.timersecond < 1000) info.timerText.text = ""+info.timersecond;
+            else info.timerText.text = "999+";
+
         SpawnNumberX = 1; //начало спавна по Х
         SpawnNumberY = 5; //начало спавна по Y
         ArrColor = new int[field_size * field_size];

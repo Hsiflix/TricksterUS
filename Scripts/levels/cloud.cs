@@ -8,8 +8,8 @@ public class cloud : MonoBehaviour
     private ConstantForce force;
     private float randX = 0f;
 
-    private int type = 1; //1=Flash, 2=Trick, 3=Angel, 4=Us
-    private int mode = 1; //1=AddStep, 2=AddTime, 3=Rotation, 4= 
+    private int type = 1; //1=Flash, 2=Angel, 3=Us
+    private int mode = 1; // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
     private int value = 0; //Количество добавляемого (шагов или времени)
 
     private bool Active = false;
@@ -17,6 +17,7 @@ public class cloud : MonoBehaviour
     private double coefficient = 0;
     private float forceX = 0f;
     private float forceY = 0f;
+    private float timeToShowTrick = 3.5f; //Время, между показом того, что облачно - трикстер. Рандомное, настраивается в Start()
 
     public Sprite UsCloud;
 	public Sprite FlCloud;
@@ -27,6 +28,7 @@ public class cloud : MonoBehaviour
     void Start()
     {
         force = GetComponent<ConstantForce>();
+        timeToShowTrick = Random.Range(2f,3.5f);
     }
 
     void Update()
@@ -55,11 +57,11 @@ public class cloud : MonoBehaviour
         }
     }
 
-    public void Initialize(int typeS, int modeS, int valueS = 0){
+    public void Initialize(int typeS, int modeS, int trick, int valueS = 0){
         type = typeS;
         mode = modeS;
         value = valueS;
-        switch(type){ //1=Flash, 2=Trick, 3=Angel, 4=Us
+        switch(type){ //1=Flash, 2=Angel, 3=Us
             case 1: GetComponent<SpriteRenderer>().sprite = FlCloud;
                     Vector3 p1 = Camera.main.ScreenToWorldPoint(new Vector3 (0f, 0f, 0f)); 
                     Vector3 p3 = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0f));
@@ -76,16 +78,16 @@ public class cloud : MonoBehaviour
                     forceY = (Camera.main.transform.position.y - transform.position.y) / (float)coefficient;
                     force = GetComponent<ConstantForce>();
                     force.force = new Vector3 (forceX, forceY, 0f);
+                    if(trick == 1) StartCoroutine(trcikShow(FlCloud));
                     ActiveFlash = true;
                 break;
-            case 2: GetComponent<SpriteRenderer>().sprite = TrCloud;
-                    Active = true;
-                break;
-            case 3: GetComponent<SpriteRenderer>().sprite = AnCloud;
+            case 2: GetComponent<SpriteRenderer>().sprite = AnCloud;
+                    if(trick == 1) StartCoroutine(trcikShow(AnCloud));
                     AnCloudPart2.SetActive(true);
                     Active = true;
                 break;
-            case 4: GetComponent<SpriteRenderer>().sprite = UsCloud;
+            case 3: GetComponent<SpriteRenderer>().sprite = UsCloud;
+                    if(trick == 1) StartCoroutine(trcikShow(UsCloud));
                     Active = true;
                 break;
         }
@@ -94,7 +96,7 @@ public class cloud : MonoBehaviour
     void Touch(){
         Active = false;
         info.activeTouch = true;
-        switch (mode)
+        switch (mode) // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
         {
             case 1: AddStep(value);
                 break;
@@ -102,13 +104,15 @@ public class cloud : MonoBehaviour
                 break;
             case 3: Rotate();
                 break;
-            case 4: ColorBallBoom();
+            case 4: FindMaxWay();
                 break;
-            case 5: TortBombBoom();
+            case 5: ColorBallBoom();
                 break;
-            case 6: HalfTime();
+            case 6: TortBombBoom();
                 break;
-            case 7: FindMaxWay();
+            case 7: HalfTime();
+                break;
+            case 8: HalfStep();
                 break;
             default: Debug.Log("Error: cloud.Touch()"); DestroyThis();
                 break;
@@ -120,10 +124,20 @@ public class cloud : MonoBehaviour
         DestroyThis();
     }
 
+    void HalfStep(int valueS = 2){
+        if (info.stepGo)
+        {
+            info.steps = (int)(info.steps/valueS);
+            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,4);
+        }
+        DestroyThis();
+    }
+
     void HalfTime(int valueS = 2){
         if (info.timerGo)
         {
             info.timersecond = (int)(info.timersecond/valueS);
+            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,3);
         }
         DestroyThis();
     }
@@ -158,6 +172,7 @@ public class cloud : MonoBehaviour
         if (info.timerGo)
         {
             info.timersecond += valueS;
+            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,1);
         }
         DestroyThis();
     }
@@ -167,12 +182,21 @@ public class cloud : MonoBehaviour
         if (info.stepGo)
         {
             info.steps += valueS;
+            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,2);
         }
-        GameObject.Find("Game").GetComponent<info>().Step();
         DestroyThis();
     }
 
     void DestroyThis(){
         Destroy(GameObject.Find(transform.name.ToString()));
+    }
+
+    IEnumerator trcikShow(Sprite memorized){
+        repeat:
+        yield return new WaitForSeconds(timeToShowTrick);
+        GetComponent<SpriteRenderer>().sprite = TrCloud;
+        yield return new WaitForSeconds(0.2f);
+        GetComponent<SpriteRenderer>().sprite = memorized;
+        goto repeat;
     }
 }
