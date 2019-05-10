@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class lvl2config : MonoBehaviour
-{
+public class lvl1config : MonoBehaviour
+{  
     void Start()
     {
-        spawn.field_size = 6; //Размер поля
+        spawn.field_size = 4; //Размер поля
         info.steps = 10; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
-        info.timersecond = 1000; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
+        info.timersecond = 150; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
         info.winBall = 3; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
         
         info.stat_balls = new int[] {}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
@@ -24,8 +24,8 @@ public class lvl2config : MonoBehaviour
 
         GetComponent<trickHelp>().quantity = 5; //Кол-во облаков (Мб сделать случайным?)
 
-        GetComponent<Bot>().enabled = true; //Вкл бота (EVA)
-        info.botColor = 0; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
+        //BotX.BotOn = false; // Включение бота (не забудь включить кол-во ходов)
+        //BotX.BotWin = 2; // Победный цвет бота: 1-blue, 2- yellow, 3- green, 4-red; 
         
         info.field_size = spawn.field_size;
 
@@ -40,5 +40,6 @@ public class lvl2config : MonoBehaviour
             GetComponent<tortoiseBall>().noTrick = true;
 
         GetComponent<spawn>().enabled = true;
+
     }
 }

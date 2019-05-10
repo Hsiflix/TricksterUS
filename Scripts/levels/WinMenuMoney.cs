@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class WinMenuMoney : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public class WinMenuMoney : MonoBehaviour {
         rightBottomMenu.GetComponent<Text>().text = tmpMoney.ToString();
         leftBottomMenu.GetComponent<Text>().text = "+ "+0;
         StartCoroutine(AddMoney());
+        if(int.Parse(SceneManager.GetActiveScene().name.Substring(3)) == info.lvl) info.lvl++;
+        info.Save();
     }
 
     IEnumerator AddMoney(){

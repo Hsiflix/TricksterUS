@@ -48,7 +48,12 @@ public class cloud : MonoBehaviour
 			}
         }
         if(ActiveFlash){
-            if((transform.position.y > Camera.main.transform.position.y + 12f && transform.position.y < Camera.main.transform.position.y + 18f) || (transform.position.y < Camera.main.transform.position.y - 12f && transform.position.y > Camera.main.transform.position.y - 18f)) DestroyThis();
+            if((transform.position.y > Camera.main.transform.position.y + 12f && transform.position.y < Camera.main.transform.position.y + 18f) || (transform.position.y < Camera.main.transform.position.y - 12f && transform.position.y > Camera.main.transform.position.y - 18f)) 
+            {
+                GameObject.Find("Game").GetComponent<trickHelp>().flashExist++;
+                GameObject.Find("Game").GetComponent<trickHelp>().Flash();
+                DestroyThis();
+            }
         }
         if(Active){
             randX = Random.Range(-0.00000035f,0.0000003501f);

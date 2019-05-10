@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class info : MonoBehaviour
 {
@@ -13,15 +15,19 @@ public class info : MonoBehaviour
     static public int winBall; //Победный цвет
     static public int field_size; //Размер поля
     static public int colorNextInt; //Номер цвета хода
+    static public int lvl = 1; //Текущий уровень
+    static public int max_lvl = 18; //Последний уровень
     static public Sprite colorNext; //Цвет хода
     static public Sprite ball_blue, ball_yellow, ball_green, ball_red, ball_tort; //Спрайты шаров
     static public GameObject ballPrefab; //Префаб шара
     static public bool activeRot = false;
     static public bool activeTouch = true;
     private bool activeRotCheck = false;
-    static public int queue = 0, preQueue = 0;
+    static public int queue = 0;
     static public int[] ballColors;
     static public int[] stat_balls;
+    static public int botColor = 0;
+    static public bool botActive = false;
     private float secondgametime;
     static public Text timerText, stepsText;
     private int timerLimitForBlink = 10;
@@ -29,8 +35,13 @@ public class info : MonoBehaviour
     private Camera cam;
     public GameObject LoseMenu;
     public GameObject WinMenu;
+    private bool botTurn = false;
 
     void Start(){
+        activeRot = false;
+        activeTouch = true;
+        activeRotCheck = false;
+        queue = 0;
         ballColors = new int[4];
         timerText = GameObject.Find("Timer").GetComponent<Text>();
         stepsText = GameObject.Find("Steps").GetComponent<Text>();
@@ -52,17 +63,39 @@ public class info : MonoBehaviour
         //CHECK QUEUE, WIN AND STEPS_LOSE
         if(activeRotCheck && queue == 0){
             activeRot = false;
+            if(botActive){
+                if(botTurn){
+                    CanvasBot.your_turn_bt = true;
+                    botTurn = false;
+                }else{
+                    CanvasBot.opponent_turn_bt = true;
+                    botTurn = true;
+                }
+            }
             if(ballColors[winBall] == field_size * field_size){
-                Debug.Log("WWWIIINN");
-                //Time.timeScale = 0;
                 WinMenu.SetActive(true);
                 GameObject.Find("Game").SetActive(false);
-            }
-            if(stepGo && steps == 0){
-                Debug.Log("LLLOOOSSSEEE(steps)");
-                Time.timeScale = 0;
-                LoseMenu.SetActive(true);
-                GameObject.Find("Game").SetActive(false);
+            }else{
+                if(stepGo && steps == 0){
+                    if(!botActive){
+                        LoseMenu.SetActive(true);
+                        GameObject.Find("Game").SetActive(false);
+                    }else{
+                        int botCount = 0;
+                        int playerCount = 0;
+                        for (int i = 0; i < field_size * field_size; i++){
+                            if(spawn.ArrColor[i] == winBall) playerCount++;
+                            else if(spawn.ArrColor[i] == botColor) botCount++;
+                        }
+                        if(playerCount > botCount){
+                            WinMenu.SetActive(true);
+                            GameObject.Find("Game").SetActive(false);
+                        }else{
+                            LoseMenu.SetActive(true);
+                            GameObject.Find("Game").SetActive(false);
+                        }
+                    }
+                }
             }
         }
         if(activeRotCheck) activeRotCheck = false;
@@ -80,7 +113,7 @@ public class info : MonoBehaviour
             else timerText.text = "999+";
             if(timersecond < timerLimitForBlink){
                 if (timersecond % 2 == 1){
-                    cam.backgroundColor = new Color(160 / 255f, 61 / 255f, 45 / 255f); //Color.red
+                    cam.backgroundColor = Color.red;//new Color(160 / 255f, 61 / 255f, 45 / 255f); //Color.red
                     timerText.color = Color.red;
                 }
                 else {
@@ -91,10 +124,24 @@ public class info : MonoBehaviour
         }
         if (timerGo && timersecond == 0)
         {
-            Debug.Log("LLLOOOSSSEEE(timer)");
-            Time.timeScale = 0;
-            LoseMenu.SetActive(true);
-            GameObject.Find("Game").SetActive(false);
+            if(!botActive && ballColors[winBall] != field_size * field_size){
+                LoseMenu.SetActive(true);
+                GameObject.Find("Game").SetActive(false);
+            }else{
+                int botCount = 0;
+                int playerCount = 0;
+                for (int i = 0; i < field_size * field_size; i++){
+                    if(spawn.ArrColor[i] == winBall) playerCount++;
+                    else if(spawn.ArrColor[i] == botColor) botCount++;
+                }
+                if(playerCount > botCount){
+                    WinMenu.SetActive(true);
+                    GameObject.Find("Game").SetActive(false);
+                }else{
+                    LoseMenu.SetActive(true);
+                    GameObject.Find("Game").SetActive(false);
+                }
+            }
         }
     }
 
@@ -142,5 +189,33 @@ public class info : MonoBehaviour
     IEnumerator BlinkIE(int modeS){
         if(timersecond <= timerLimitForBlink)
         yield return new WaitForSeconds(1.5f);
+    }
+
+    public static void Save()
+    {
+        string info = lvl.ToString() + "*" + money.ToString()/*+ "*" + AudioOn.ToString() + "*"*/;
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/savedGames.gd");
+        bf.Serialize(file, info);
+        file.Close();
+    }
+
+    public static void Load()
+    {
+        if (File.Exists(Application.persistentDataPath + "/savedGames.gd"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/savedGames.gd", FileMode.Open);
+            string info = (string)bf.Deserialize(file);
+            Debug.Log("Load: "+ info);
+            string[] infos = info.Split('*');
+            /*foreach (var word in infos)
+            {
+                Debug.Log("info: " + word);
+            }*/
+            lvl = int.Parse(infos[0]);
+            money = int.Parse(infos[1]);
+            file.Close();
+        }
     }
 }

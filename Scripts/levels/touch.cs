@@ -27,12 +27,13 @@ public class touch : MonoBehaviour
                 {
                     objectTouch = hit.collider.name; // Записывает имя объекта по которому каснулись
                     try{
-                        if(Int32.Parse(objectTouch)>=0){
-                            if(!info.stat_balls.Contains(Int32.Parse(objectTouch))){
-                                if(!GameObject.Find(objectTouch).GetComponent<ball>().busy){
-                                    info.setNextColor(spawn.ArrColor[Int32.Parse(objectTouch)]);
+                        int objectTouchInt = Int32.Parse(objectTouch);
+                        if(objectTouchInt>=0){
+                            if(!info.stat_balls.Contains(objectTouchInt)){
+                                if(!spawn.Balls[objectTouchInt].GetComponent<ball>().busy){
+                                    info.setNextColor(spawn.ArrColor[objectTouchInt]);
                                     GetComponent<info>().Step();
-                                    GameObject.Find(objectTouch).GetComponent<ball>().touchThis = true; // Начинаем крутить шар, до которого каснулись
+                                    spawn.Balls[objectTouchInt].GetComponent<ball>().touchThis = true; // Начинаем крутить шар, до которого каснулись
                                     info.activeRot = true;
                                 }
                             }
@@ -42,7 +43,7 @@ public class touch : MonoBehaviour
                     }
                 }
             }    
-        }               
+        }         
     }
 
     public void PauseButton(){
