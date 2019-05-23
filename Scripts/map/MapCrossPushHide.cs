@@ -11,7 +11,7 @@ public class MapCrossPushHide : MonoBehaviour {
 
     void Start()
     {
-        info.Load();
+        //info.Load();
         string last_lvl_name = "lvl" + info.lvl.ToString();
         last_lvl = GameObject.Find(last_lvl_name);
         for (int i = info.lvl + 1; i <= info.max_lvl; i++)

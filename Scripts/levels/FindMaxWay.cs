@@ -1,62 +1,55 @@
-﻿/* EVA */
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
 
-public class Bot : MonoBehaviour
-{
-    public GameObject CanvasBot;
+public class FindMaxWay : MonoBehaviour {
+
+    public GameObject Target;
+    static public bool targetActive = false;
     private int[] ArrColor; //массив цветов
     private int[] Lengths; //длины цепочек
     private int[] ArrWay; //массив направлений
-    //private int bestColor = 0; //бот будет искать макс. в 1:его цвете, 0:любом цвете НЕ игрока
     private int currentBall = 0;
+    private GameObject TargenInst;
 
-    // Start is called before the first frame update
     void Start()
     {
-        CanvasBot.SetActive(true);
-        info.botActive = true;
-        ArrColor = new int[spawn.field_size * spawn.field_size];
-        ArrWay = new int[spawn.field_size * spawn.field_size];
-        Lengths = new int[spawn.field_size * spawn.field_size];
+
     }
 
     public void MainFunc(){
+        ArrColor = new int[spawn.field_size * spawn.field_size];
+        ArrWay = new int[spawn.field_size * spawn.field_size];
         Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
         Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
         Lengths = new int[spawn.field_size * spawn.field_size];
-        if(ArrColor.Contains(info.botColor)){
+        if(ArrColor.Contains(info.winBall)){
             for (int i = ArrColor.GetLowerBound(0); i <= ArrColor.GetUpperBound(0); i++){
-                if (ArrColor[i] == info.botColor){
+                if (ArrColor[i] == info.winBall){
                     Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
                     Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
                     currentBall = i;
                     LengthCheck(currentBall);
                 }
             }
-        }else{ //Если нет нужного цвета, то берем цвет НЕ игрока
-            for (int i = ArrColor.GetLowerBound(0); i <= ArrColor.GetUpperBound(0); i++){
-                if (ArrColor[i] != info.winBall){
-                    Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
-                    Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
-                    currentBall = i;
-                    LengthCheck(currentBall);
-                }
-            }
+        }else{
+            return;
         }
+        try{Destroy(TargenInst);}catch{}
         int maxValue = Lengths.Max();
         int maxIndex = Lengths.ToList().IndexOf(maxValue);
-        info.setNextColor(spawn.ArrColor[maxIndex]);
-        GetComponent<info>().Step();
-        spawn.Balls[maxIndex].GetComponent<ball>().touchThis = true; // Начинаем крутить шар, до которого каснулись
-        info.activeRot = true;
+        TargenInst = Instantiate(Target, new Vector2(spawn.Balls[maxIndex].transform.position.x,spawn.Balls[maxIndex].transform.position.y), Quaternion.Euler(0, 0, 0));
+        targetActive = true;
+    }
+
+    public void DestroyTarget(){
+        Destroy(TargenInst);
     }
 
     void LengthCheck(int current){
-        if(ArrColor[current] != info.botColor)
+        if(ArrColor[current] != info.winBall)
             Lengths[currentBall]++;
         if (ArrWay[current] < 3)
             ArrWay[current]++;

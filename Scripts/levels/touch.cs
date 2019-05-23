@@ -10,11 +10,6 @@ public class touch : MonoBehaviour
     private string objectTouch = "";
     public GameObject PauseMenu;
 
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (!info.activeRot && info.activeTouch) // Возможность касания
@@ -35,6 +30,9 @@ public class touch : MonoBehaviour
                                     GetComponent<info>().Step();
                                     spawn.Balls[objectTouchInt].GetComponent<ball>().touchThis = true; // Начинаем крутить шар, до которого каснулись
                                     info.activeRot = true;
+                                    if(FindMaxWay.targetActive){
+                                       GetComponent<FindMaxWay>().DestroyTarget();
+                                    } 
                                 }
                             }
                         }
@@ -47,6 +45,7 @@ public class touch : MonoBehaviour
     }
 
     public void PauseButton(){
+        if(info.AudioOn) GameObject.Find("Music_PauseButton").GetComponent<AudioSource>().Play();
         Time.timeScale = 0;
         PauseMenu.SetActive(true);
         GameObject.Find("Game").SetActive(false);

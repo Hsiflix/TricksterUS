@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class cloud : MonoBehaviour
 {
@@ -11,13 +12,14 @@ public class cloud : MonoBehaviour
     private int type = 1; //1=Flash, 2=Angel, 3=Us
     private int mode = 1; // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
     private int value = 0; //Количество добавляемого (шагов или времени)
+    private int trick = 0;
 
     private bool Active = false;
     private bool ActiveFlash = false;
     private double coefficient = 0;
     private float forceX = 0f;
     private float forceY = 0f;
-    private float timeToShowTrick = 3.5f; //Время, между показом того, что облачно - трикстер. Рандомное, настраивается в Start()
+    private float timeToShowTrick = 3f; //Время, между показом того, что облачно - трикстер. Рандомное, настраивается в Start()
 
     public Sprite UsCloud;
 	public Sprite FlCloud;
@@ -62,10 +64,11 @@ public class cloud : MonoBehaviour
         }
     }
 
-    public void Initialize(int typeS, int modeS, int trick, int valueS = 0){
+    public void Initialize(int typeS, int modeS, int trickS, int valueS = 0){
         type = typeS;
         mode = modeS;
         value = valueS;
+        trick = trickS;
         switch(type){ //1=Flash, 2=Angel, 3=Us
             case 1: GetComponent<SpriteRenderer>().sprite = FlCloud;
                     Vector3 p1 = Camera.main.ScreenToWorldPoint(new Vector3 (0f, 0f, 0f)); 
@@ -77,7 +80,7 @@ public class cloud : MonoBehaviour
                         case 1: transform.position = new Vector3(Random.Range(p1.x, p3.x), Random.Range(p3.y+1.5f, p3.y+3.5f), -3f);
                             break;
                     }
-                    coefficient = (Camera.main.transform.position.y - transform.position.y) / (0.0000007); //Коэффициент умножения
+                    coefficient = (Camera.main.transform.position.y - transform.position.y) / (0.0000018); //Коэффициент умножения 0.0000007
                     if(coefficient<0) coefficient = -coefficient;
                     forceX = (Camera.main.transform.position.x - transform.position.x) / (float)coefficient;
                     forceY = (Camera.main.transform.position.y - transform.position.y) / (float)coefficient;
@@ -101,6 +104,11 @@ public class cloud : MonoBehaviour
     void Touch(){
         Active = false;
         info.activeTouch = true;
+        if(trick == 1 && type != 1){
+            GameObject.Find("Game").GetComponent<trickHelp>().DestroyAll();
+        }else{
+            GameObject.Find("Game").GetComponent<trickHelp>().cloudsCount--;
+        }
         switch (mode) // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
         {
             case 1: AddStep(value);
@@ -125,7 +133,11 @@ public class cloud : MonoBehaviour
     }
 
     void FindMaxWay(){
-        /* Здесь должен быть код */
+        if(spawn.ArrColor.Contains(info.winBall)){
+            GameObject.Find("Game").GetComponent<FindMaxWay>().MainFunc();
+        }else{
+            Rotate();
+        }
         DestroyThis();
     }
 
@@ -134,6 +146,8 @@ public class cloud : MonoBehaviour
         {
             info.steps = (int)(info.steps/valueS);
             GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,4);
+        }else{
+            HalfTime();
         }
         DestroyThis();
     }
@@ -143,6 +157,12 @@ public class cloud : MonoBehaviour
         {
             info.timersecond = (int)(info.timersecond/valueS);
             GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,3);
+        }else{
+            if(info.stepGo){
+                HalfStep();
+            }else{
+                TortBombBoom();
+            }
         }
         DestroyThis();
     }
@@ -163,7 +183,7 @@ public class cloud : MonoBehaviour
     {
         for (int i = 0; i < spawn.field_size * spawn.field_size; i++)
         {
-            if (spawn.ArrColor[i] != info.winBall)
+            if ((spawn.ArrColor[i] != info.winBall)&& !GameObject.Find(""+i).GetComponent<ball>().busy)
             {
                 short randomRot = (short)Random.Range(1, 4);
                 GameObject.Find(i.ToString()).GetComponent<ball>().RotateBall(randomRot);
@@ -192,7 +212,7 @@ public class cloud : MonoBehaviour
         DestroyThis();
     }
 
-    void DestroyThis(){
+    public void DestroyThis(){
         Destroy(GameObject.Find(transform.name.ToString()));
     }
 
