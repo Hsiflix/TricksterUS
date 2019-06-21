@@ -12,9 +12,9 @@ public class lvl10config : MonoBehaviour
         info.timersecond = 0; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
         info.winBall = 0; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
         
-        info.stat_balls = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 21, 22, 23, 24, 25, 26, 28, 30,
-                                        35, 37, 39, 41, 42, 44, 46, 48, 51, 53, 55, 57,
-                                        58, 59, 60, 62, 64, 71, 73, 74, 75, 76, 77, 78, 79, 80}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
+        info.stat_balls = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 18, 20, 21, 22, 23, 24, 25, 27, 29,
+                                        34, 36, 38, 40, 41, 43, 45, 47, 50, 52, 54, 56,
+                                        57, 58, 59, 61, 63, 70, 72, 73, 74, 75, 76, 77, 78, 79}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
 
         colorBall.timeForExplosion = 23; //Время между взрывами ColorBall'а  [9...]
         colorBall.quantity = 1; //Кол-во ColorBall'а
@@ -44,8 +44,11 @@ public class lvl10config : MonoBehaviour
             info.timerGo = false;
         }
 
-        if(GetComponent<tortoiseBall>().enabled)
-            GetComponent<tortoiseBall>().noTrick = true;
+        if (GetComponent<tortoiseBall>().enabled)
+        {
+            GetComponent<tortoiseBall>().lvlActive = true;
+            Debug.Log("WARNING lvlActive");
+        }
 
         GetComponent<spawn>().enabled = true;
     }

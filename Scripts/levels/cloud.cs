@@ -75,9 +75,9 @@ public class cloud : MonoBehaviour
                     Vector3 p3 = Camera.main.ScreenToWorldPoint(new Vector3(Camera.main.pixelWidth, Camera.main.pixelHeight, 0f));
                     int UD = Random.Range(0,2);
                     switch (UD){
-                        case 0: transform.position = new Vector3(Random.Range(p1.x, p3.x), Random.Range(p1.y-3.5f, p1.y-1.5f), -3f);
+                        case 0: transform.position = new Vector3(Random.Range(p1.x, p3.x), Random.Range(p1.y-3.5f, p1.y-1.5f), -7f);
                             break;
-                        case 1: transform.position = new Vector3(Random.Range(p1.x, p3.x), Random.Range(p3.y+1.5f, p3.y+3.5f), -3f);
+                        case 1: transform.position = new Vector3(Random.Range(p1.x, p3.x), Random.Range(p3.y+1.5f, p3.y+3.5f), -7f);
                             break;
                     }
                     coefficient = (Camera.main.transform.position.y - transform.position.y) / (0.0000018); //Коэффициент умножения 0.0000007
@@ -105,10 +105,29 @@ public class cloud : MonoBehaviour
         Active = false;
         info.activeTouch = true;
         if(trick == 1 && type != 1){
-            GameObject.Find("Game").GetComponent<trickHelp>().DestroyAll();
+              GameObject.Find("Game").GetComponent<trickHelp>().DestroyAll();
         }else{
-            GameObject.Find("Game").GetComponent<trickHelp>().cloudsCount--;
+              GameObject.Find("Game").GetComponent<trickHelp>().cloudsCount--;
         }
+        if (trick != 1){
+            switch (type)
+            {
+                case 3: int var = UnityEngine.Random.Range(0, 3);
+                    switch (var)
+                    {
+                        case 0: if(info.AudioOn) GameObject.Find("Audio_Cloud_1").GetComponent<AudioSource>().Play();
+                            break;
+                        case 1: if(info.AudioOn) GameObject.Find("Audio_Cloud_2").GetComponent<AudioSource>().Play();
+                            break;
+                        case 2: if(info.AudioOn) GameObject.Find("Audio_Cloud_3").GetComponent<AudioSource>().Play();
+                            break;
+                    }
+                    break;
+                case 2: if(info.AudioOn) GameObject.Find("Audio_Angel").GetComponent<AudioSource>().Play();
+                    break;
+            }
+        }
+        Debug.Log("mode: "+mode);
         switch (mode) // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
         {
             case 1: AddStep(value);
@@ -134,7 +153,7 @@ public class cloud : MonoBehaviour
 
     void FindMaxWay(){
         if(spawn.ArrColor.Contains(info.winBall)){
-            GameObject.Find("Game").GetComponent<FindMaxWay>().MainFunc();
+              GameObject.Find("Game").GetComponent<FindMaxWay>().MainFunc();
         }else{
             Rotate();
         }
@@ -142,7 +161,7 @@ public class cloud : MonoBehaviour
     }
 
     void HalfStep(int valueS = 2){
-        if (info.stepGo)
+        if (info.stepGo && info.steps > 1)
         {
             info.steps = (int)(info.steps/valueS);
             GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,4);
@@ -161,7 +180,7 @@ public class cloud : MonoBehaviour
             if(info.stepGo){
                 HalfStep();
             }else{
-                TortBombBoom();
+                TortBombBoom(1);
             }
         }
         DestroyThis();
@@ -219,6 +238,7 @@ public class cloud : MonoBehaviour
     IEnumerator trcikShow(Sprite memorized){
         repeat:
         yield return new WaitForSeconds(timeToShowTrick);
+        if(info.AudioOn) GameObject.Find("Audio_Bad_cloud").GetComponent<AudioSource>().Play();
         GetComponent<SpriteRenderer>().sprite = TrCloud;
         yield return new WaitForSeconds(0.2f);
         GetComponent<SpriteRenderer>().sprite = memorized;

@@ -43,7 +43,7 @@ public class lvl12config : MonoBehaviour
         }
 
         if(GetComponent<tortoiseBall>().enabled)
-            GetComponent<tortoiseBall>().noTrick = true;
+            GetComponent<tortoiseBall>().lvlActive = true;
 
         GetComponent<spawn>().enabled = true;
     }

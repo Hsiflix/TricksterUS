@@ -12,15 +12,18 @@ public class options : MonoBehaviour
 	}
 	
 	public void Opt(){
+		if(info.AudioOn) GameObject.Find("Audio_Option_level").GetComponent<AudioSource>().Play();
 		bool isOpen = _animator.GetBool("open");
 		_animator.SetBool("open",!isOpen);
 	}
 	
 	public void Mus(){
+		if(info.AudioOn) GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
 
 	}
 
 	public void Sou(){
+		if(info.AudioOn) GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
 
 	}
 }

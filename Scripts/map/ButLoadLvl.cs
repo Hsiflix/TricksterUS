@@ -15,6 +15,7 @@ public class ButLoadLvl : MonoBehaviour {
 	
     public void PushButton()
     {
+        if(info.AudioOn)   GameObject.Find("Chest_sound").GetComponent<AudioSource>().Play();
         _map.SetActive(false);
         _anim.Play();
         StartCoroutine(Animat());
@@ -22,7 +23,7 @@ public class ButLoadLvl : MonoBehaviour {
 
     IEnumerator Animat()
     {
-        yield return new WaitForSeconds(0.6f);
+        yield return new WaitForSeconds(0.7f);
         SceneManager.LoadScene(_namelvl, LoadSceneMode.Single);
     }
 }

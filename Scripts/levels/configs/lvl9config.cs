@@ -20,7 +20,7 @@ public class lvl9config : MonoBehaviour
 
         tortoiseBall.timeForExplosion = 15; //Время между взрывами TortoiseBall'а  [9...]
         tortoiseBall.quantity = 2; //Кол-во TortoiseBall'а
-        GetComponent<tortoiseBall>().enabled = true; //Вкл TortoiseBall'а
+        GetComponent<tortoiseBall>().enabled = false; //Вкл TortoiseBall'а
 
         GetComponent<trickHelp>().quantity = 4; //Кол-во облаков (Мб сделать случайным?)
 
@@ -43,7 +43,7 @@ public class lvl9config : MonoBehaviour
         }
 
         if(GetComponent<tortoiseBall>().enabled)
-            GetComponent<tortoiseBall>().noTrick = true;
+            GetComponent<tortoiseBall>().lvlActive = true;
 
         GetComponent<spawn>().enabled = true;
     }

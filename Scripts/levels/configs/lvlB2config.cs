@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class lvl19config : MonoBehaviour
+public class lvlB2config : MonoBehaviour
 {
     void Start()
     {
-        spawn.field_size = 10; //Размер поля
-        info.steps = 3; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
+        spawn.field_size = 9; //Размер поля
+        info.steps = 25; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
         info.timersecond = 0; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
         info.winBall = 0; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
         
@@ -24,8 +24,8 @@ public class lvl19config : MonoBehaviour
 
         GetComponent<trickHelp>().quantity = 4; //Кол-во облаков (Мб сделать случайным?)
 
-        GetComponent<Bot>().enabled = false; //Вкл бота (EVA)
-        info.botColor = 0; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
+        GetComponent<Bot>().enabled = true; //Вкл бота (EVA)
+        info.botColor = 2; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
 
         //================================================================================================
         

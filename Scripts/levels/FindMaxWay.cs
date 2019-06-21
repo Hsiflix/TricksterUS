@@ -27,7 +27,7 @@ public class FindMaxWay : MonoBehaviour {
         Lengths = new int[spawn.field_size * spawn.field_size];
         if(ArrColor.Contains(info.winBall)){
             for (int i = ArrColor.GetLowerBound(0); i <= ArrColor.GetUpperBound(0); i++){
-                if (ArrColor[i] == info.winBall){
+                if (ArrColor[i] == info.winBall && !GameObject.Find(""+i).GetComponent<ball>().busy){
                     Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
                     Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
                     currentBall = i;
@@ -35,13 +35,30 @@ public class FindMaxWay : MonoBehaviour {
                 }
             }
         }else{
+            Rotate();
             return;
         }
         try{Destroy(TargenInst);}catch{}
         int maxValue = Lengths.Max();
-        int maxIndex = Lengths.ToList().IndexOf(maxValue);
-        TargenInst = Instantiate(Target, new Vector2(spawn.Balls[maxIndex].transform.position.x,spawn.Balls[maxIndex].transform.position.y), Quaternion.Euler(0, 0, 0));
-        targetActive = true;
+        if(maxValue > 0){
+            int maxIndex = Lengths.ToList().IndexOf(maxValue);
+            TargenInst = Instantiate(Target, new Vector2(spawn.Balls[maxIndex].transform.position.x,spawn.Balls[maxIndex].transform.position.y), Quaternion.Euler(0, 0, 0));
+            targetActive = true;
+        }else{
+            Rotate();
+        }
+    }
+
+    void Rotate()
+    {
+        for (int i = 0; i < spawn.field_size * spawn.field_size; i++)
+        {
+            if ((spawn.ArrColor[i] != info.winBall)&& !GameObject.Find(""+i).GetComponent<ball>().busy)
+            {
+                short randomRot = (short)UnityEngine.Random.Range(1, 4);
+                GameObject.Find(i.ToString()).GetComponent<ball>().RotateBall(randomRot);
+            }
+        }
     }
 
     public void DestroyTarget(){

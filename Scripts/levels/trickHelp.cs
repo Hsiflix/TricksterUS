@@ -10,6 +10,7 @@ public class trickHelp : MonoBehaviour
     private bool isCoolDown = false;
     private bool Active = true;
     public GameObject cloudPrefab;
+    public GameObject TrickHelpCount;
     public int quantity = 1;
     public int trickCount = 0;
     public int cloudsCount = 0;
@@ -28,6 +29,7 @@ public class trickHelp : MonoBehaviour
             CoolDownImage.fillAmount -= 1 / CoolDownPart * Time.deltaTime;
             if (CoolDownImage.fillAmount <= 0)
             {
+                TrickHelpCount.SetActive(false);
                 isCoolDown = false;
                 CoolDownImage.fillAmount = 0;
                 Active = true;
@@ -39,11 +41,25 @@ public class trickHelp : MonoBehaviour
         }
     }
 
+    public void UpdateTrickCount(){
+        info.trickHelpCount--;
+        info.Save();
+        Text trickHelpText = GameObject.Find("TrickHelpCount").GetComponent<Text>();
+        if(info.trickHelpCount < 10){
+            trickHelpText.text = info.trickHelpCount.ToString();
+        }else{
+            trickHelpText.text = "9+";
+        }
+    }
+
     public void MainFunc(){
-        if(Active){
+        if(Active && info.trickHelpCount > 0){
             Active = false;
             isCoolDown = true;
+            TrickHelpCount.SetActive(true);
+            UpdateTrickCount();
             CoolDownImage.fillAmount = 0.99f;
+            if(info.AudioOn)   GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
             clouds = new GameObject[quantity];
             int scenario = UnityEngine.Random.Range(1, 6); //(1, 6) - в 20% случаях (==1) будет только flash, иначе us или angel
             cloudsCount = quantity;
@@ -60,9 +76,10 @@ public class trickHelp : MonoBehaviour
                     break;
                 default:
                     for (int i = 0; i < quantity; i++){
-                        clouds[i] = Instantiate(cloudPrefab, Camera.main.transform.position - new Vector3(0f, 7.5f+(i*1.5f), -3f), Quaternion.Euler(0, 0, 0));
+                        clouds[i] = Instantiate(cloudPrefab, Camera.main.transform.position - new Vector3(0f, 7.5f+(i*1.5f), -2f), Quaternion.Euler(0, 0, 0));
                         clouds[i].name = "Cloud_"+i;
-                        int typeS = UnityEngine.Random.Range(2, 4); //2=Angel, 3=Us
+                        int typeS = UnityEngine.Random.Range(2, 6); //2=Angel, 3=Us
+                        if(typeS>2) typeS = 3;
                         int trickS = UnityEngine.Random.Range(1, 4);
                         int modeS = 0; // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
                         int valueS = 0;
@@ -92,6 +109,7 @@ public class trickHelp : MonoBehaviour
                             modeS = UnityEngine.Random.Range(5, 9); //5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
                             trickCount++;
                         }
+                        //modeS = 4;
                         GameObject.Find(clouds[i].name).GetComponent<cloud>().Initialize(typeS, modeS, trickS, valueS);
                     }
                     break;
@@ -106,14 +124,12 @@ public class trickHelp : MonoBehaviour
                 clouds[i] = Instantiate(cloudPrefab, Camera.main.transform.position - new Vector3(0f, 7.5f+(i*1.5f), -3f), Quaternion.Euler(0, 0, 0));
                 clouds[i].name = "Cloud_"+i;
                 int typeS = 1; //1=Flash
-                int trickS = UnityEngine.Random.Range(1, 6);
                 int modeS = 0; // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
                 int valueS = 0;
-                if(trickS != 1){
-                    modeS = UnityEngine.Random.Range(1, 4); // 1 - AddStep, 2 - AddTime, 3 - Rotate
-                    valueS = UnityEngine.Random.Range(20, 35);
-                }else modeS = UnityEngine.Random.Range(5, 9); // 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
-                GameObject.Find(clouds[i].name).GetComponent<cloud>().Initialize(typeS, modeS, trickS, valueS);
+                modeS = UnityEngine.Random.Range(1, 4); // 1 - AddStep, 2 - AddTime, 3 - Rotate
+                valueS = UnityEngine.Random.Range(20, 35);
+                GameObject.Find(clouds[i].name).GetComponent<cloud>().Initialize(typeS, modeS, 2, valueS);
+                if(info.AudioOn) GameObject.Find("Audio_Flash_f").GetComponent<AudioSource>().Play();
                 tmpFlashCount++;
             }
         }

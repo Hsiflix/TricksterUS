@@ -12,7 +12,7 @@ public class tortoiseBall : MonoBehaviour
     private float secondgametime = 0f;
     private int timersecond = 1;
     private bool active = false;
-    public bool noTrick = true;
+    public bool lvlActive = false;
     private int[] listOfBoom;
     private string objectTouch = "";
     private List<int> balls = new List<int>();
@@ -39,6 +39,7 @@ public class tortoiseBall : MonoBehaviour
                         {
                             if(""+balls[i]==objectTouch){
                                 StartCoroutine(BoomIE(balls[i], ballsColor[i]));
+                                if(info.AudioOn) GameObject.Find("Audio_Turtle_1").GetComponent<AudioSource>().Play();
                                 break;
                             }
                         }
@@ -47,15 +48,19 @@ public class tortoiseBall : MonoBehaviour
                     }
                 }
             }    
-        }      
-        secondgametime += Time.deltaTime;
-        if (secondgametime >= 1)
-        {
-            secondgametime = 0;
-            timersecond++;
         }
-        if(timersecond%timeForExplosion==0 && !active && noTrick){
-            Boom(quantity);
+        if (lvlActive)
+        {
+            secondgametime += Time.deltaTime;
+            if (secondgametime >= 1)
+            {
+                secondgametime = 0;
+                timersecond++;
+            }
+            if (timersecond % timeForExplosion == 0 && !active)
+            {
+                Boom(quantity);
+            }
         }
     }
     public void Boom(int quantityS){
@@ -63,6 +68,9 @@ public class tortoiseBall : MonoBehaviour
         for (int i = 0; i < quantityS; i++){
             repeat: int ball = Random.Range(0, spawn.field_size*spawn.field_size);
             if(GameObject.Find(""+ball).GetComponent<ball>().busy) goto repeat;
+            GameObject tmpAppear = Instantiate(info.appearancePrefab, GameObject.Find(""+ball).transform.position + new Vector3(0f, 0f, -5.1f), Quaternion.Euler(0, 0, 0));
+            tmpAppear.name = i+"A";
+            StartCoroutine(DestroyAppearance(i));
             balls.Add(ball);
             ballsColor.Add(spawn.ArrColor[ball]);
             GameObject.Find(""+ball).GetComponent<ball>().busy = true;
@@ -82,6 +90,7 @@ public class tortoiseBall : MonoBehaviour
         }
         GameObject.Find(""+nameInt).GetComponent<SpriteRenderer>().sprite = colorSprite;
     }
+
 
     IEnumerator BoomIE(int nameInt, int color){
         listOfBoom = new int[9];
@@ -124,6 +133,7 @@ public class tortoiseBall : MonoBehaviour
         foreach (int i in listOfBoom){
             if(i != -1){
                 GameObject.Find(""+i).GetComponent<SpriteRenderer>().sprite = info.ball_tort;
+                if(info.AudioOn) GameObject.Find("Audio_Turtle_2").GetComponent<AudioSource>().Play();
                 yield return new WaitForSeconds(0.2f);
                 GameObject.Find(""+i).GetComponent<SpriteRenderer>().sprite = colorSprite;
                 info.ballColors[spawn.ArrColor[i]]--;
@@ -141,5 +151,10 @@ public class tortoiseBall : MonoBehaviour
         ballsColor = new List<int>();
         active = false;
         info.activeTouch = true;
+    }
+
+    IEnumerator DestroyAppearance(int nameInt){
+        yield return new WaitForSeconds(1.1f);
+        Destroy(GameObject.Find(nameInt+"A"));
     }
 }

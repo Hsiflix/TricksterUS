@@ -30,6 +30,7 @@ public class mainMenu : MonoBehaviour {
 
     public void NewGame()
     {
+        if(info.AudioOn)   GameObject.Find("Woodcrack_1").GetComponent<AudioSource>().Play();
         Buttons.SetActive(false);
         if (info.lvl != 0)
         {
@@ -66,6 +67,9 @@ public class mainMenu : MonoBehaviour {
     }
     public void Continue()
     {
+        info.Load();
+        if(info.AudioOn)   GameObject.Find("Woodcrack_1").GetComponent<AudioSource>().Play();
+        Buttons.SetActive(false);
         ContinueA.SetActive(true);
         mem = ContinueA;
         nameScene = "Map";
@@ -75,6 +79,8 @@ public class mainMenu : MonoBehaviour {
     }
     public void EndLess()
     {
+        if(info.AudioOn)   GameObject.Find("Woodcrack_1").GetComponent<AudioSource>().Play();
+        Buttons.SetActive(false);
         EndLessA.SetActive(true);
         mem = EndLessA;
         nameScene = "Map";
@@ -84,6 +90,8 @@ public class mainMenu : MonoBehaviour {
     }
     public void Options()
     {
+        if(info.AudioOn)   GameObject.Find("Woodcrack_1").GetComponent<AudioSource>().Play();
+        Buttons.SetActive(false);
         OptionsA.SetActive(true);
         mem = OptionsA;
         nameScene = "Map";
@@ -93,6 +101,8 @@ public class mainMenu : MonoBehaviour {
     }
     public void Exit()
     {
+        if(info.AudioOn)   GameObject.Find("Woodcrack_1").GetComponent<AudioSource>().Play();
+        Buttons.SetActive(false);
         Application.Quit();
     }
     public void ToTricksterHouse()

@@ -14,11 +14,11 @@ public class lvl2config : MonoBehaviour
         
         info.stat_balls = new int[] {}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
 
-        colorBall.timeForExplosion = 15; //Время между взрывами ColorBall'а  [9...]
-        colorBall.quantity = 1; //Кол-во ColorBall'а
+        colorBall.timeForExplosion = 10; //Время между взрывами ColorBall'а  [9...]
+        colorBall.quantity = 3; //Кол-во ColorBall'а
         GetComponent<colorBall>().enabled = false; //Вкл ColorBall'а
 
-        tortoiseBall.timeForExplosion = 15; //Время между взрывами TortoiseBall'а  [9...]
+        tortoiseBall.timeForExplosion = 13; //Время между взрывами TortoiseBall'а  [9...]
         tortoiseBall.quantity = 2; //Кол-во TortoiseBall'а
         GetComponent<tortoiseBall>().enabled = false; //Вкл TortoiseBall'а
 
@@ -43,7 +43,7 @@ public class lvl2config : MonoBehaviour
         }
 
         if(GetComponent<tortoiseBall>().enabled)
-            GetComponent<tortoiseBall>().noTrick = true;
+            GetComponent<tortoiseBall>().lvlActive = true;
 
         GetComponent<spawn>().enabled = true;
     }

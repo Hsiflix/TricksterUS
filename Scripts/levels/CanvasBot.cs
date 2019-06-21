@@ -32,7 +32,7 @@ public class CanvasBot : MonoBehaviour {
 		isTrue = opponent_turn.GetBool("Animat");
 		if(opponent_turn.GetCurrentAnimatorStateInfo(0).IsName("Trn") && isTrue){
 			opponent_turn.SetBool("Animat",false);
-            GameObject.Find("Game").GetComponent<Bot>().MainFunc();
+              GameObject.Find("Game").GetComponent<Bot>().MainFunc();
 		}
 	}
 }

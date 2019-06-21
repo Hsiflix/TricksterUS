@@ -12,7 +12,7 @@ public class lvl15config : MonoBehaviour
         info.timersecond = 30; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
         info.winBall = 3; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
         
-        info.stat_balls = new int[] {3, 5, 10, 12, 17, 19, 24, 26, 31, 33, 38, 40, 45, 47}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
+        info.stat_balls = new int[] {2, 4, 9, 11, 16, 18, 23, 25, 30, 32, 37, 39, 44, 46}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
 
         colorBall.timeForExplosion = 20; //Время между взрывами ColorBall'а  [9...]
         colorBall.quantity = 1; //Кол-во ColorBall'а
@@ -43,7 +43,7 @@ public class lvl15config : MonoBehaviour
         }
 
         if(GetComponent<tortoiseBall>().enabled)
-            GetComponent<tortoiseBall>().noTrick = true;
+            GetComponent<tortoiseBall>().lvlActive = true;
 
         GetComponent<spawn>().enabled = true;
     }

@@ -26,6 +26,7 @@ public class touch : MonoBehaviour
                         if(objectTouchInt>=0){
                             if(!info.stat_balls.Contains(objectTouchInt)){
                                 if(!spawn.Balls[objectTouchInt].GetComponent<ball>().busy){
+                                    //Debug.Log("Touch: "+objectTouchInt);
                                     info.setNextColor(spawn.ArrColor[objectTouchInt]);
                                     GetComponent<info>().Step();
                                     spawn.Balls[objectTouchInt].GetComponent<ball>().touchThis = true; // Начинаем крутить шар, до которого каснулись
@@ -45,13 +46,18 @@ public class touch : MonoBehaviour
     }
 
     public void PauseButton(){
-        if(info.AudioOn) GameObject.Find("Music_PauseButton").GetComponent<AudioSource>().Play();
-        Time.timeScale = 0;
-        PauseMenu.SetActive(true);
-        GameObject.Find("Game").SetActive(false);
+        if(spawn.endSpawn){
+            info.Save();
+            if(info.AudioOn)   GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
+            Time.timeScale = 0;
+            PauseMenu.SetActive(true);
+            GameObject.Find("Game").SetActive(false);
+        }
     }
 
     public void RebootButton(){
+        info.Save();
+        if(info.AudioOn)   GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

@@ -9,9 +9,9 @@ public class AudioSourseOnOff : MonoBehaviour {
 		Audio = GetComponent<AudioSource>();
 		AudioOnOff.audios.Add(Audio);
 		if(info.AudioOn){
-			Audio.volume = 0.5f;
+			Audio.enabled = true;
 		} else {
-			Audio.volume = 0f;
+			Audio.enabled = false;
 		}
 	}
 }

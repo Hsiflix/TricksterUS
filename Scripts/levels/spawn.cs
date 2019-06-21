@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class spawn : MonoBehaviour
 {
     public GameObject ballPrefab; //Префаб шара
+    public GameObject appearancePrefab;
     public Sprite ball_blue, ball_yellow, ball_green, ball_red, ball_static, ball_tort; //Спрайты шаров
 
     static public int field_size; //Размер поля
@@ -18,12 +19,13 @@ public class spawn : MonoBehaviour
     static public int[] ArrColor; //массив цветов
     static public int[] ArrWay; //массив направлений
     static public GameObject[] Balls; //масив шаров
-
+    static public bool endSpawn = false;
     private int RandomColor; //рандомный цвет
     private int RandomWay; //рандомное направление
 
     void Start()
     {
+        endSpawn = false;
         if(info.steps < 1000) info.stepsText.text = ""+info.steps;
             else info.stepsText.text = "999+";
         if(info.timersecond < 1000) info.timerText.text = ""+info.timersecond;
@@ -36,17 +38,17 @@ public class spawn : MonoBehaviour
         Balls = new GameObject[field_size * field_size];
         Camera.main.transform.position = new Vector3(0.45f + field_size * 0.45f, 4.05f + field_size * 0.45f, -10);
         switch(info.winBall){
-            case 0: GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_blue; 
-                    GameObject.Find("Outline").GetComponent<Image>().color = Color.blue; 
+            case 0:   GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_blue; 
+                      GameObject.Find("Outline").GetComponent<Image>().color = Color.blue; 
             break;
-            case 1: GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_yellow; 
-                    GameObject.Find("Outline").GetComponent<Image>().color = Color.yellow;
+            case 1:   GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_yellow; 
+                      GameObject.Find("Outline").GetComponent<Image>().color = Color.yellow;
             break;
-            case 2: GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_green; 
-                    GameObject.Find("Outline").GetComponent<Image>().color = Color.green; 
+            case 2:   GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_green; 
+                      GameObject.Find("Outline").GetComponent<Image>().color = Color.green; 
             break;
-            case 3: GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_red; 
-                    GameObject.Find("Outline").GetComponent<Image>().color = Color.red; 
+            case 3:   GameObject.Find("WinBall").GetComponent<Image>().sprite = ball_red; 
+                      GameObject.Find("Outline").GetComponent<Image>().color = Color.red; 
             break;
         }
         info.ball_blue = this.ball_blue;
@@ -55,6 +57,7 @@ public class spawn : MonoBehaviour
         info.ball_yellow = this.ball_yellow;
         info.ball_tort = this.ball_tort;
         info.ballPrefab = this.ballPrefab;
+        info.appearancePrefab = this.appearancePrefab;
         StartCoroutine(Spawn());
     }
 
@@ -69,6 +72,9 @@ public class spawn : MonoBehaviour
             Balls[i].name = ""+i;
 
             if(info.stat_balls.Contains(i)){
+                GameObject tmpAppear = Instantiate(appearancePrefab, GameObject.Find(""+Balls[i].name).transform.position + new Vector3(0f, 0f, -5.1f), Quaternion.Euler(0, 0, 0));
+                tmpAppear.name = i+"A";
+                StartCoroutine(DestroyAppearance(i));
                 RandomColor = 4;
                 ArrColor[i] = info.winBall;
                 Balls[i].transform.rotation = Quaternion.Euler(0, 0, 0);;
@@ -93,5 +99,11 @@ public class spawn : MonoBehaviour
             }
 
         }
+        endSpawn = true;
+    }
+
+    IEnumerator DestroyAppearance(int nameInt){
+        yield return new WaitForSeconds(1.1f);
+        Destroy(GameObject.Find(nameInt+"A"));
     }
 }

@@ -43,8 +43,10 @@ public class colorBall : MonoBehaviour
             if(GameObject.Find(""+ball).GetComponent<ball>().busy){
                 goto repeat;
             }
-
-            balls[i] = Instantiate(info.ballPrefab, GameObject.Find(""+ball).transform.position + new Vector3(0f, 0f, -5f), Quaternion.Euler(0, 0, 0));
+            GameObject tmpAppear = Instantiate(info.appearancePrefab, GameObject.Find(""+ball).transform.position + new Vector3(0f, 0f, -5.1f), Quaternion.Euler(0, 0, 0));
+            tmpAppear.name = i+"A";
+            StartCoroutine(DestroyAppearance(i));
+            balls[i] = Instantiate(info.ballPrefab,   GameObject.Find(""+ball).transform.position + new Vector3(0f, 0f, -5f), Quaternion.Euler(0, 0, 0));
             balls[i].name = ball+"C";
             GameObject.Find(""+ball).GetComponent<ball>().busy = true;
             GameObject.Find(ball+"C").GetComponent<Animator>().enabled = true;
@@ -54,14 +56,16 @@ public class colorBall : MonoBehaviour
             if(randomColorBoom==info.winBall){
                 goto repeatColor;
             }
-
+            if(i==1){
+                if(info.AudioOn) GameObject.Find(ball.ToString()).GetComponent<AudioSource>().Play();
+            }
             StartCoroutine(BoomIE(randomColorBoom, ball, i));
         }
     }
 
     IEnumerator BoomIE(int color, int nameInt, int number){
         yield return new WaitForSeconds(7.2f);
-        GameObject.Find(nameInt+"C").transform.position = new Vector3 (GameObject.Find(nameInt+"C").transform.position.x,GameObject.Find(nameInt+"C").transform.position.y,-5.5f);
+        GameObject.Find(nameInt+"C").transform.position = new Vector3 (  GameObject.Find(nameInt+"C").transform.position.x,  GameObject.Find(nameInt+"C").transform.position.y,-5.5f);
         listOfBoom[number] = new int[9];
         yield return new WaitForSeconds(0.8f);
         listOfBoom[number][0] = nameInt-info.field_size-1;
@@ -74,6 +78,8 @@ public class colorBall : MonoBehaviour
         listOfBoom[number][7] = nameInt+info.field_size;
         listOfBoom[number][8] = nameInt+info.field_size+1;
         
+        GameObject.Find(""+nameInt).GetComponent<ball>().busy = false;
+
         for (int i = 0; i < 9; i++){
             if(listOfBoom[number][i] < 0 || 
             listOfBoom[number][i] >= info.field_size*info.field_size || 
@@ -108,6 +114,13 @@ public class colorBall : MonoBehaviour
             }
         }
         GameObject.Find(""+nameInt).GetComponent<ball>().busy = false;
+        yield return new WaitForSeconds(1f);
+        Destroy(GameObject.Find(nameInt+"A"));
         Destroy(GameObject.Find(nameInt+"C"));
+    }
+
+    IEnumerator DestroyAppearance(int nameInt){
+        yield return new WaitForSeconds(1.1f);
+        Destroy(GameObject.Find(nameInt+"A"));
     }
 }

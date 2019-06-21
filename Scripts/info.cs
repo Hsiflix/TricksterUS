@@ -9,18 +9,20 @@ public class info : MonoBehaviour
 {
     static public int steps; //Кол-во шагов
     static public int money = 11; //Кол-во монет
+    static public int trickHelpCount = 1; //Кол-во помощей трикстера
     static public bool stepGo = false; //Шагометр
     static public int timersecond; //Кол-во времени
     static public bool timerGo = false; //Таймер
     static public int winBall; //Победный цвет
     static public int field_size; //Размер поля
     static public int colorNextInt; //Номер цвета хода
-    static public int lvl = 18; //Текущий уровень
+    static public int lvl = 1; //Текущий уровень
     static public int max_lvl = 18; //Последний уровень
     static public bool AudioOn = true; //Включение/выключение звука
     static public Sprite colorNext; //Цвет хода
     static public Sprite ball_blue, ball_yellow, ball_green, ball_red, ball_tort; //Спрайты шаров
     static public GameObject ballPrefab; //Префаб шара
+    static public GameObject appearancePrefab;
     static public bool activeRot = false;
     static public bool activeTouch = true;
     private bool activeRotCheck = false;
@@ -64,6 +66,8 @@ public class info : MonoBehaviour
         //CHECK QUEUE, WIN AND STEPS_LOSE
         if(activeRotCheck && queue == 0){
             activeRot = false;
+            //Debug.Log("activeRot = false;");
+            activeRotCheck = false;
             if(botActive){
                 if(botTurn){
                     CanvasBot.your_turn_bt = true;
@@ -77,19 +81,14 @@ public class info : MonoBehaviour
                 WinMenu.SetActive(true);
                 GameObject.Find("Game").SetActive(false);
             }else{
-                if(stepGo && steps == 0){
+                if(stepGo && steps <= 0){
                     if(!botActive){
                         Debug.Log("STEPS_LOSE");
                         LoseMenu.SetActive(true);
                         GameObject.Find("Game").SetActive(false);
                     }else{
-                        int botCount = 0;
-                        int playerCount = 0;
-                        for (int i = 0; i < field_size * field_size; i++){
-                            if(spawn.ArrColor[i] == winBall) playerCount++;
-                            else if(spawn.ArrColor[i] == botColor) botCount++;
-                        }
-                        if(playerCount > botCount){
+                        if(ballColors[winBall] > ballColors[botColor])
+                        {
                             WinMenu.SetActive(true);
                             GameObject.Find("Game").SetActive(false);
                         }else{
@@ -100,7 +99,9 @@ public class info : MonoBehaviour
                 }
             }
         }
-        if(activeRotCheck) activeRotCheck = false;
+        if(activeRotCheck) {
+            activeRotCheck = false;
+        }
         if(activeRot && queue == 0){
             activeRotCheck = true;
         }
@@ -111,41 +112,42 @@ public class info : MonoBehaviour
             secondgametime = 0;
             if(timerGo) timersecond -= 1;
             else timersecond++;
-            if(timersecond < 1000) timerText.text = ""+timersecond;
-            else timerText.text = "999+";
+            if(timerText.color != Color.green){
+                if(timersecond < 1000) timerText.text = ""+timersecond;
+                else timerText.text = "999+";
+            }
             if(timersecond < timerLimitForBlink && info.timerGo){
                 if (timersecond % 2 == 1){
                     cam.backgroundColor = Color.red;//new Color(160 / 255f, 61 / 255f, 45 / 255f); //Color.red
-                    timerText.color = Color.red;
+                    if(timerText.color != Color.green) timerText.color = Color.red;
                 }
                 else {
                     cam.backgroundColor = camColor; //72A9AD
-                    timerText.color = Color.white;
+                    if(timerText.color != Color.green) timerText.color = Color.white;
                 }
             }else{
                 cam.backgroundColor = camColor; //72A9AD
-                timerText.color = Color.white;
+                if(timerText.color != Color.green) timerText.color = Color.white;
             }
         }
-        if (timerGo && timersecond == 0)
+        if (timerGo && timersecond <= 0)
         {
-            if(!botActive && ballColors[winBall] != field_size * field_size){
-                Debug.Log("TIMER_LOSE");
-                LoseMenu.SetActive(true);
+            if (ballColors[winBall] == field_size * field_size){
+                WinMenu.SetActive(true);
                 GameObject.Find("Game").SetActive(false);
             }else{
-                int botCount = 0;
-                int playerCount = 0;
-                for (int i = 0; i < field_size * field_size; i++){
-                    if(spawn.ArrColor[i] == winBall) playerCount++;
-                    else if(spawn.ArrColor[i] == botColor) botCount++;
-                }
-                if(playerCount > botCount){
-                    WinMenu.SetActive(true);
-                    GameObject.Find("Game").SetActive(false);
-                }else{
+                if (!botActive){
+                    Debug.Log("TIMER_LOSE");
                     LoseMenu.SetActive(true);
                     GameObject.Find("Game").SetActive(false);
+                }else{
+                    if(ballColors[winBall] > ballColors[botColor]){
+                        WinMenu.SetActive(true);
+                        GameObject.Find("Game").SetActive(false);
+                    }else{
+                        LoseMenu.SetActive(true);
+                        GameObject.Find("Game").SetActive(false);
+                    }
                 }
             }
         }
@@ -202,7 +204,7 @@ public class info : MonoBehaviour
 
     public static void Save()
     {
-        string info = lvl.ToString() + "*" + money.ToString() + "*" + AudioOn.ToString();
+        string info = lvl.ToString() + "*" + money.ToString() + "*" + AudioOn.ToString() + "*" + trickHelpCount.ToString();
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/savedGames.gd");
         bf.Serialize(file, info);
@@ -223,6 +225,7 @@ public class info : MonoBehaviour
             if(infos[2]=="True")
             AudioOn = true;
             else AudioOn = false;
+            trickHelpCount = int.Parse(infos[3]);
             file.Close();
         }
     }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class lvl19config : MonoBehaviour
+public class lvlB1config : MonoBehaviour
 {
     void Start()
     {
-        spawn.field_size = 10; //Размер поля
-        info.steps = 3; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
+        spawn.field_size = 7; //Размер поля
+        info.steps = 20; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
         info.timersecond = 0; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
         info.winBall = 0; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
         
@@ -16,7 +16,7 @@ public class lvl19config : MonoBehaviour
 
         colorBall.timeForExplosion = 15; //Время между взрывами ColorBall'а  [9...]
         colorBall.quantity = 1; //Кол-во ColorBall'а
-        GetComponent<colorBall>().enabled = true; //Вкл ColorBall'а
+        GetComponent<colorBall>().enabled = false; //Вкл ColorBall'а
 
         tortoiseBall.timeForExplosion = 15; //Время между взрывами TortoiseBall'а  [9...]
         tortoiseBall.quantity = 2; //Кол-во TortoiseBall'а
@@ -24,8 +24,8 @@ public class lvl19config : MonoBehaviour
 
         GetComponent<trickHelp>().quantity = 4; //Кол-во облаков (Мб сделать случайным?)
 
-        GetComponent<Bot>().enabled = false; //Вкл бота (EVA)
-        info.botColor = 0; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
+        GetComponent<Bot>().enabled = true; //Вкл бота (EVA)
+        info.botColor = 3; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
 
         //================================================================================================
         

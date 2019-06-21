@@ -19,7 +19,9 @@ public class WinMenuMoney : MonoBehaviour {
         rightBottomMenu.GetComponent<Text>().text = tmpMoney.ToString();
         leftBottomMenu.GetComponent<Text>().text = "+ "+0;
         StartCoroutine(AddMoney());
-        if(int.Parse(SceneManager.GetActiveScene().name.Substring(3)) == info.lvl) info.lvl++;
+        //if(int.Parse(SceneManager.GetActiveScene().name.Substring(3)) == info.lvl) info.lvl++;
+		if(int.Parse(SceneManager.GetActiveScene().name.Substring(3)) >= info.lvl) 
+			info.lvl=int.Parse(SceneManager.GetActiveScene().name.Substring(3))+1;
         info.Save();
     }
 
@@ -37,5 +39,6 @@ public class WinMenuMoney : MonoBehaviour {
             leftBottomMenu.GetComponent<Text>().text = "+ "+tmpMoneyAdd;
             yield return new WaitForSeconds(0.1f);
         }
+        if(info.AudioOn) GameObject.Find("audio_money_fall").SetActive(false);
     }
-}
+} 
