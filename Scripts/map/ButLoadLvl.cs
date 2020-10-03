@@ -8,17 +8,24 @@ public class ButLoadLvl : MonoBehaviour {
     public Animation _anim;
     public GameObject _map;
     static public string _namelvl = "lvl";
+    private bool active = true;
     
 	void Start () {
         _anim = gameObject.GetComponent<Animation>();
+        _map = GameObject.Find("Canvas");
     }
 	
     public void PushButton()
     {
-        if(info.AudioOn)   GameObject.Find("Chest_sound").GetComponent<AudioSource>().Play();
-        _map.SetActive(false);
-        _anim.Play();
-        StartCoroutine(Animat());
+        if(active){
+            active = false;
+            if(info.AudioOn)   GameObject.Find("Chest_sound").GetComponent<AudioSource>().Play();
+            _map.SetActive(false);
+            _anim.Play();
+            info.isCoop = false;
+            info.isEndless = false;
+            StartCoroutine(Animat());
+        }
     }
 
     IEnumerator Animat()

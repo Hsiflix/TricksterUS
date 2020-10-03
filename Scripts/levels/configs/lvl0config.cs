@@ -8,10 +8,10 @@ public class lvl0config : MonoBehaviour
     void Start()
     {
         //Основное
-        spawn.field_size = 5; //Размер поля
+        spawn.field_size = 2; //Размер поля
         info.steps = 0; // Кол-во ходов, 0 - показывает кол-во ходов, >0 - убывающее кол-во ходов
         info.timersecond = 0; // Кол-во секунд, 0 - показывает время игры, >0 - убывающий таймер
-        info.winBall = 2; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
+        info.winBall = 1; // Победный цвет: 0-blue, 1- yellow, 2- green, 3-red;
 
         //Включение дополнительного 
         info.stat_balls = new int[] {}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
@@ -30,16 +30,22 @@ public class lvl0config : MonoBehaviour
         info.botColor = 0; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
 
         //================================================================================================
+
+        if(!GetComponent<Bot>().enabled) info.botActive = false;
+        
+        info.isEndless = false;
         
         info.field_size = spawn.field_size;
 
         if (info.steps > 0){ //Вкл шагометра
             info.stepGo = true;
+            info.configStep = info.steps;
         }else{
             info.stepGo = false;
         }
         if (info.timersecond > 0){ //Вкл таймер
             info.timerGo = true;
+            info.configTime = info.timersecond;
         }else{
             info.timerGo = false;
         }
@@ -48,5 +54,6 @@ public class lvl0config : MonoBehaviour
             GetComponent<tortoiseBall>().lvlActive = true;
 
         GetComponent<spawn>().enabled = true;
+        GetComponent<tutorial_lvl>().enabled = true;
     }
 }

@@ -1,53 +1,73 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class pause : MonoBehaviour
 {
     public GameObject Game;
+    private Animator moneyMenuAnim, trickMenuAnim;
+    public bool actionEnableTH = true, actionEnableM = true;
 
     private void Start() {
-        /*Text moneyText = GameObject.Find("money_text").GetComponent<Text>();
-        info.Load();
-        if(info.money < 1000){
-            moneyText.text = info.money.ToString();
-        }else if(info.money < 1000000){
-            string tmp = info.money.ToString().Substring(0,info.money.ToString().Length-3)+'.';
-            tmp += info.money.ToString().Substring(info.money.ToString().Length-3,1)+'k';
-            moneyText.text = tmp;
-        }else{
-            string tmp = info.money.ToString().Substring(0,1)+'.';
-            tmp += info.money.ToString().Substring(1,1)+"kk+";
-            moneyText.text = tmp;
-        }*/
+        moneyMenuAnim = GameObject.Find("money_menu").GetComponent<Animator>();
+        trickMenuAnim = GameObject.Find("trickHelp_menu").GetComponent<Animator>();
     }
 
     public void Continue()
     {
-        Time.timeScale = 1;
+        info.isPause = false;
         if(info.AudioOn)   GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
-        Game.SetActive(true);
-        /*Text trickHelpTextLvl = GameObject.Find("TrickHelpCount").GetComponent<Text>();
-        if(info.trickHelpCount < 10){
-            trickHelpTextLvl.text = info.trickHelpCount.ToString();
+        bool isOpenMoney = moneyMenuAnim.GetBool("open");
+        bool isOpenTrick = trickMenuAnim.GetBool("open");
+		if(isOpenMoney) { moneyMenuAnim.SetBool("open",!isOpenMoney); }
+		if(isOpenTrick) { trickMenuAnim.SetBool("open",!isOpenTrick); }
+        if(isOpenMoney || isOpenTrick){
+            if(info.AudioOn) GameObject.Find("audio_buy_menu").GetComponent<AudioSource>().Play();
+            StartCoroutine(ContinueIE(0.7f));
         }else{
-            trickHelpTextLvl.text = "9+";
-        }*/
-        GameObject.Find("Pause").SetActive(false);
+            StartCoroutine(ContinueIE(0));
+        }
+    }
+
+    IEnumerator ContinueIE(float timer){
+        Time.timeScale = 1;
+        yield return new WaitForSeconds(timer);
+
+        //Debug.LogWarning("actionEnableTH = " + actionEnableTH + "; actionEnableM = "+actionEnableM);
+
+        if(!(actionEnableTH && actionEnableM)){
+            StartCoroutine(ContinueIE(0.1f));
+        }else{
+
+            /*21.09.2019*/
+            if(colorBall.AudioPlay){
+                int tmp = Game.GetComponent<colorBall>().AudioBall;
+                if(info.AudioOn) GameObject.Find(tmp.ToString()).GetComponent<AudioSource>().Play();
+            }
+            /* */
+            Game.SetActive(true);
+            GameObject.Find("Pause").SetActive(false);
+
+        }
     }
 
     public void OnTheMap()
     {
+        string tmp = SceneManager.GetActiveScene().name;
+        endlessScore.scoreNum = 0;
         Time.timeScale = 1;
         if(info.AudioOn)   GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
-        SceneManager.LoadScene("Map", LoadSceneMode.Single);
+        if(tmp.Substring(3,1)== "E" || tmp.Substring(3,1)== "C"){
+            SceneManager.LoadScene("menu", LoadSceneMode.Single);
+        }else{
+            SceneManager.LoadScene("Map", LoadSceneMode.Single);
+        }
     }
 
     public void Exit()
     {
         if(info.AudioOn)   GameObject.Find("Button_click").GetComponent<AudioSource>().Play();
+        info.Save();
         Application.Quit();
     }
 }

@@ -14,30 +14,36 @@ public class lvl17config : MonoBehaviour
         
         info.stat_balls = new int[] {}; //Статичные шарики [0..spawn.field_size*spawn.field_size]
 
-        colorBall.timeForExplosion = 15; //Время между взрывами ColorBall'а  [9...]
+        colorBall.timeForExplosion = 30; //Время между взрывами ColorBall'а  [9...]
         colorBall.quantity = 1; //Кол-во ColorBall'а
-        GetComponent<colorBall>().enabled = false; //Вкл ColorBall'а
+        GetComponent<colorBall>().enabled = true; //Вкл ColorBall'а
 
         tortoiseBall.timeForExplosion = 15; //Время между взрывами TortoiseBall'а  [9...]
         tortoiseBall.quantity = 2; //Кол-во TortoiseBall'а
-        GetComponent<tortoiseBall>().enabled = false; //Вкл TortoiseBall'а
+        GetComponent<tortoiseBall>().enabled = true; //Вкл TortoiseBall'а
 
-        GetComponent<trickHelp>().quantity = 4; //Кол-во облаков (Мб сделать случайным?)
+        GetComponent<trickHelp>().quantity = Random.Range(3,9);//4; //Кол-во облаков (Мб сделать случайным?)
 
         GetComponent<Bot>().enabled = false; //Вкл бота (EVA)
         info.botColor = 0; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
 
         //================================================================================================
+
+        if(!GetComponent<Bot>().enabled) info.botActive = false;
+        
+        info.isEndless = false;
         
         info.field_size = spawn.field_size;
 
         if (info.steps > 0){ //Вкл шагометра
             info.stepGo = true;
+            info.configStep = info.steps;
         }else{
             info.stepGo = false;
         }
         if (info.timersecond > 0){ //Вкл таймер
             info.timerGo = true;
+            info.configTime = info.timersecond;
         }else{
             info.timerGo = false;
         }

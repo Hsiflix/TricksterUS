@@ -57,16 +57,20 @@ public class cloud : MonoBehaviour
                 DestroyThis();
             }
         }
-        if(Active){
+        if(Active){ //-4..+4
             randX = Random.Range(-0.00000035f,0.0000003501f);
+            if(transform.position.x < Camera.main.transform.position.x-4f) randX = 0.0000003501f;
+            if(transform.position.x > Camera.main.transform.position.x+4f) randX = -0.00000035f;
             force.force = new Vector3 (randX, 0.00000005f, 0f);
             if(transform.position.y > Camera.main.transform.position.y + 6f && transform.position.y < Camera.main.transform.position.y + 12f) DestroyThis();
         }
     }
 
     public void Initialize(int typeS, int modeS, int trickS, int valueS = 0){
+        //Debug.Log(transform.name);
         type = typeS;
         mode = modeS;
+        //mode = 6;
         value = valueS;
         trick = trickS;
         switch(type){ //1=Flash, 2=Angel, 3=Us
@@ -86,6 +90,7 @@ public class cloud : MonoBehaviour
                     forceY = (Camera.main.transform.position.y - transform.position.y) / (float)coefficient;
                     force = GetComponent<ConstantForce>();
                     force.force = new Vector3 (forceX, forceY, 0f);
+                    GetComponent<BoxCollider>().size = new Vector3(20f, 20f, 1f);
                     if(trick == 1) StartCoroutine(trcikShow(FlCloud));
                     ActiveFlash = true;
                 break;
@@ -106,6 +111,7 @@ public class cloud : MonoBehaviour
         info.activeTouch = true;
         if(trick == 1 && type != 1){
               GameObject.Find("Game").GetComponent<trickHelp>().DestroyAll();
+              if(info.AudioOn) GameObject.Find("Audio_ouch").GetComponent<AudioSource>().Play();
         }else{
               GameObject.Find("Game").GetComponent<trickHelp>().cloudsCount--;
         }
@@ -127,7 +133,7 @@ public class cloud : MonoBehaviour
                     break;
             }
         }
-        Debug.Log("mode: "+mode);
+        //Debug.Log("mode: "+mode);
         switch (mode) // 1 - AddStep, 2 - AddTime, 3 - Rotate, 4 - FindMaxWay, 5 - ColorBallBoom, 6 - TortBombBoom, 7 - HalfTime, 8 - HalfStep
         {
             case 1: AddStep(value);
@@ -164,7 +170,7 @@ public class cloud : MonoBehaviour
         if (info.stepGo && info.steps > 1)
         {
             info.steps = (int)(info.steps/valueS);
-            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,4);
+            GameObject.Find("Game").GetComponent<showDiff>().ShowDif(valueS,4);
         }else{
             HalfTime();
         }
@@ -175,12 +181,12 @@ public class cloud : MonoBehaviour
         if (info.timerGo)
         {
             info.timersecond = (int)(info.timersecond/valueS);
-            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,3);
+            GameObject.Find("Game").GetComponent<showDiff>().ShowDif(valueS,3);
         }else{
-            if(info.stepGo){
+            if(info.stepGo && info.steps > 1){
                 HalfStep();
             }else{
-                TortBombBoom(1);
+                TortBombBoom();
             }
         }
         DestroyThis();
@@ -202,10 +208,20 @@ public class cloud : MonoBehaviour
     {
         for (int i = 0; i < spawn.field_size * spawn.field_size; i++)
         {
-            if ((spawn.ArrColor[i] != info.winBall)&& !GameObject.Find(""+i).GetComponent<ball>().busy)
-            {
-                short randomRot = (short)Random.Range(1, 4);
-                GameObject.Find(i.ToString()).GetComponent<ball>().RotateBall(randomRot);
+            if(!info.isCoop || (info.isCoop && CanvasBot.turn_bt)){
+                if ((spawn.ArrColor[i] != info.winBall)&& !GameObject.Find(""+i).GetComponent<ball>().busy)
+                {
+                    short randomRot = (short)Random.Range(1, 4);
+                    GameObject.Find(i.ToString()).GetComponent<ball>().RotateBall(randomRot);
+                }
+            }else{
+                if(info.isCoop && !CanvasBot.turn_bt){
+                    if ((spawn.ArrColor[i] != coopMenu.player2Color)&& !GameObject.Find(""+i).GetComponent<ball>().busy)
+                    {
+                        short randomRot = (short)Random.Range(1, 4);
+                        GameObject.Find(i.ToString()).GetComponent<ball>().RotateBall(randomRot);
+                    }
+                }
             }
         }
         DestroyThis();
@@ -216,7 +232,11 @@ public class cloud : MonoBehaviour
         if (info.timerGo)
         {
             info.timersecond += valueS;
-            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,1);
+            GameObject.Find("Game").GetComponent<showDiff>().ShowDif(valueS,1);
+        }else if(info.stepGo){
+            AddStep(valueS-9);
+        }else{
+            Rotate();
         }
         DestroyThis();
     }
@@ -226,19 +246,28 @@ public class cloud : MonoBehaviour
         if (info.stepGo)
         {
             info.steps += valueS;
-            GameObject.Find("Game").GetComponent<info>().ShowDif(valueS,2);
+            GameObject.Find("Game").GetComponent<showDiff>().ShowDif(valueS,2);
+        }else if(info.timerGo){
+            AddTime(valueS+9);
+        }else{
+            Rotate();
         }
         DestroyThis();
     }
 
     public void DestroyThis(){
+        //Debug.Log("Destroy: "+ transform.name);
         Destroy(GameObject.Find(transform.name.ToString()));
     }
 
     IEnumerator trcikShow(Sprite memorized){
         repeat:
         yield return new WaitForSeconds(timeToShowTrick);
-        if(info.AudioOn) GameObject.Find("Audio_Bad_cloud").GetComponent<AudioSource>().Play();
+        try{
+            if(info.AudioOn) GameObject.Find("Audio_Bad_cloud").GetComponent<AudioSource>().Play();
+        }catch{
+            
+        }
         GetComponent<SpriteRenderer>().sprite = TrCloud;
         yield return new WaitForSeconds(0.2f);
         GetComponent<SpriteRenderer>().sprite = memorized;

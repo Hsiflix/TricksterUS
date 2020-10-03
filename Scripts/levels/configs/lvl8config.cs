@@ -22,22 +22,28 @@ public class lvl8config : MonoBehaviour
         tortoiseBall.quantity = 2; //Кол-во TortoiseBall'а
         GetComponent<tortoiseBall>().enabled = false; //Вкл TortoiseBall'а
 
-        GetComponent<trickHelp>().quantity = 4; //Кол-во облаков (Мб сделать случайным?)
+        GetComponent<trickHelp>().quantity = Random.Range(3,9);//5; //Кол-во облаков (Мб сделать случайным?)
 
         GetComponent<Bot>().enabled = false; //Вкл бота (EVA)
         info.botColor = 0; //Цвет победы бота: 0-blue, 1- yellow, 2- green, 3-red;
 
         //================================================================================================
+
+        if(!GetComponent<Bot>().enabled) info.botActive = false;
+        
+        info.isEndless = false;
         
         info.field_size = spawn.field_size;
 
         if (info.steps > 0){ //Вкл шагометра
             info.stepGo = true;
+            info.configStep = info.steps;
         }else{
             info.stepGo = false;
         }
         if (info.timersecond > 0){ //Вкл таймер
             info.timerGo = true;
+            info.configTime = info.timersecond;
         }else{
             info.timerGo = false;
         }

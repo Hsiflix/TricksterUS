@@ -25,27 +25,52 @@ public class FindMaxWay : MonoBehaviour {
         Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
         Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
         Lengths = new int[spawn.field_size * spawn.field_size];
-        if(ArrColor.Contains(info.winBall)){
-            for (int i = ArrColor.GetLowerBound(0); i <= ArrColor.GetUpperBound(0); i++){
-                if (ArrColor[i] == info.winBall && !GameObject.Find(""+i).GetComponent<ball>().busy){
-                    Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
-                    Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
-                    currentBall = i;
-                    LengthCheck(currentBall);
+        if(!info.isCoop){
+            if(ArrColor.Contains(info.winBall)){
+                for (int i = ArrColor.GetLowerBound(0); i <= ArrColor.GetUpperBound(0); i++){
+                    if (ArrColor[i] == info.winBall && !GameObject.Find(""+i).GetComponent<ball>().busy){
+                        Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
+                        Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
+                        currentBall = i;
+                        LengthCheck(currentBall);
+                    }
                 }
+            }else{
+                Rotate();
+                return;
+            }
+            try{Destroy(TargenInst);}catch{}
+            int maxValue = Lengths.Max();
+            if(maxValue > 0){
+                int maxIndex = Lengths.ToList().IndexOf(maxValue);
+                TargenInst = Instantiate(Target, new Vector2(spawn.Balls[maxIndex].transform.position.x,spawn.Balls[maxIndex].transform.position.y), Quaternion.Euler(0, 0, 0));
+                targetActive = true;
+            }else{
+                Rotate();
             }
         }else{
-            Rotate();
-            return;
-        }
-        try{Destroy(TargenInst);}catch{}
-        int maxValue = Lengths.Max();
-        if(maxValue > 0){
-            int maxIndex = Lengths.ToList().IndexOf(maxValue);
-            TargenInst = Instantiate(Target, new Vector2(spawn.Balls[maxIndex].transform.position.x,spawn.Balls[maxIndex].transform.position.y), Quaternion.Euler(0, 0, 0));
-            targetActive = true;
-        }else{
-            Rotate();
+            if(ArrColor.Contains(coopMenu.player1Color) && CanvasBot.turn_bt || ArrColor.Contains(coopMenu.player2Color) && !CanvasBot.turn_bt){
+                for (int i = ArrColor.GetLowerBound(0); i <= ArrColor.GetUpperBound(0); i++){
+                    if (((ArrColor[i] == coopMenu.player1Color && CanvasBot.turn_bt) || (ArrColor[i] == coopMenu.player2Color && !CanvasBot.turn_bt) ) && !GameObject.Find(""+i).GetComponent<ball>().busy){
+                        Array.Copy(spawn.ArrColor,spawn.ArrColor.GetLowerBound(0),ArrColor,ArrColor.GetLowerBound(0),spawn.field_size*spawn.field_size);
+                        Array.Copy(spawn.ArrWay,spawn.ArrWay.GetLowerBound(0),ArrWay,ArrWay.GetLowerBound(0),spawn.field_size*spawn.field_size);
+                        currentBall = i;
+                        LengthCheck(currentBall);
+                    }
+                }
+            }else{
+                Rotate();
+                return;
+            }
+            try{Destroy(TargenInst);}catch{}
+            int maxValue = Lengths.Max();
+            if(maxValue > 0){
+                int maxIndex = Lengths.ToList().IndexOf(maxValue);
+                TargenInst = Instantiate(Target, new Vector2(spawn.Balls[maxIndex].transform.position.x,spawn.Balls[maxIndex].transform.position.y), Quaternion.Euler(0, 0, 0));
+                targetActive = true;
+            }else{
+                Rotate();
+            }
         }
     }
 
@@ -62,7 +87,7 @@ public class FindMaxWay : MonoBehaviour {
     }
 
     public void DestroyTarget(){
-        Destroy(TargenInst);
+        try{Destroy(TargenInst);}catch{}
     }
 
     void LengthCheck(int current){
